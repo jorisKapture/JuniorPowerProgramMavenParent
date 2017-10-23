@@ -1,17 +1,21 @@
 package be.kapture.quizinator.root.model;
 
 import be.kapture.quizinator.root.model.builder.QuestionBuilder;
+import be.kapture.quizinator.root.service.QuestionService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import be.kapture.quizinator.root.repository.QuestionRepository;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@Ignore
+@RunWith(SpringRunner.class)
 public class QuestionTest {
 
     private final static String QUESTION = "What is The Answer to the Ultimate Question of Life, The Universe, and Everything?";
@@ -20,7 +24,7 @@ public class QuestionTest {
     private static final Long ID = Long.valueOf(123456789);
 
     @Autowired
-    private QuestionRepository questionRepository;
+    private QuestionService questionService;
 
     private Question question;
 
@@ -30,9 +34,9 @@ public class QuestionTest {
     }
 
     @Test
-    public void testRepo(){
-        questionRepository.save(question);
-        Question foundQuestion = questionRepository.findOne(ID);
+    public void testService(){
+        questionService.saveQuestion(question);
+        Question foundQuestion = questionService.findQuestion(ID);
         assertEquals(foundQuestion.getId(),ID);
         assertEquals(foundQuestion.getQuestion(),QUESTION);
         assertEquals(foundQuestion.getAnswer(),ANSWER);
