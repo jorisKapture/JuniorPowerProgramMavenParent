@@ -13,11 +13,15 @@ public class QuestionBuilder
 
     private QuestionBuilder(){
         question = new Question();
-//        question.setTags(new ArrayList<Tag>());
+        question.setTags(new ArrayList<>());
     }
 
     public static QuestionBuilder aQuestion(){
         return new QuestionBuilder();
+    }
+
+    public Question build(){
+        return this.question;
     }
 
     public QuestionBuilder withId(Long id){
@@ -41,21 +45,17 @@ public class QuestionBuilder
     }
 
     public QuestionBuilder withTheme(Theme theme){
-//        question.setTheme(theme);
+        question.setTheme(theme);
         return this;
     }
 
     public QuestionBuilder withTags(List<Tag> tags){
-//        question.setTags(tags);
+        question.setTags(tags);
         return this;
     }
 
     public QuestionBuilder addTag(Tag tag){
-//        question.addTag(tag);
+        question.addTag(tag);
         return this;
-    }
-
-    public Question build(){
-        return this.question;
     }
 }

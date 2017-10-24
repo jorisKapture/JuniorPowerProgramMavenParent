@@ -1,5 +1,9 @@
 package be.kapture.quizinator.root.dto;
 
+import be.kapture.quizinator.root.model.Tag;
+
+import java.util.List;
+
 public class QuestionDTO {
 
     private Long id;
@@ -9,6 +13,16 @@ public class QuestionDTO {
     private String answer;
 
     private String url;
+
+    private List<Tag> tags;
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 
     public Long getId() {
         return id;
