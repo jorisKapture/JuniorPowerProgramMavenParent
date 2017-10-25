@@ -66,8 +66,8 @@ public class QuestionServiceTest {
         inOrder.verify(questionRepository).save(question);
     }
 
-    @Test
     @Ignore
+    @Test
     public void saveQuestion_NewTag() throws Exception {
         String newTagName = "newTag";
 

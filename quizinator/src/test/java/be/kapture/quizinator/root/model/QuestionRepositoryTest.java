@@ -51,7 +51,7 @@ public class QuestionRepositoryTest {
         assertThat(foundQuestion.getAnswer(), is(question.getAnswer()));
         assertThat(foundQuestion.getUrl(), is(question.getUrl()));
         assertThat(foundQuestion.getTheme(), is(question.getTheme()));
-      //TODO  assertThat(foundQuestion.getTags(), is(question.getTags()));
+        assertThat(foundQuestion.getTags().toArray(), is(question.getTags().toArray()));
     }
 
     private Tag aTag(String tag1) {
