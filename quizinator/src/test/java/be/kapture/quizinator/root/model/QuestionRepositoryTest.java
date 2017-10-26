@@ -4,6 +4,7 @@ import be.kapture.quizinator.root.Main;
 import be.kapture.quizinator.root.repository.QuestionRepository;
 import be.kapture.quizinator.root.repository.TagRepository;
 import be.kapture.quizinator.root.repository.ThemeRepository;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,16 @@ public class QuestionRepositoryTest {
 
     private Question question;
 
+    @Ignore
+    @Test
+    public void find42(){
+        System.out.println("**********************************");
+        System.out.println(questionRepository.findOne(42L));
+        System.out.println(questionRepository.findAll());
+        System.out.println("**********************************");
+    }
 
-
+    @Ignore
     @Test
     public void save() {
         Theme theme = new Theme();
