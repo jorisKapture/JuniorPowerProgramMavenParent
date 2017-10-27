@@ -42,7 +42,7 @@ public class QuestionRepositoryTest {
         System.out.println("**********************************");
     }
 
-    @Ignore
+
     @Test
     public void save() {
         Theme theme = new Theme();
@@ -61,6 +61,9 @@ public class QuestionRepositoryTest {
         assertThat(foundQuestion.getUrl(), is(question.getUrl()));
         assertThat(foundQuestion.getTheme(), is(question.getTheme()));
         assertThat(foundQuestion.getTags().toArray(), is(question.getTags().toArray()));
+        questionRepository.delete(question);
+        tagRepository.delete(tag);
+        themeRepository.delete(theme);
     }
 
     private Tag aTag(String tag1) {

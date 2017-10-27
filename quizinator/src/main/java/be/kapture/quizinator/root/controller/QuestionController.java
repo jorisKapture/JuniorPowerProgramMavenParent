@@ -7,10 +7,7 @@ import be.kapture.quizinator.root.repository.QuestionRepository;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,14 +32,20 @@ public class QuestionController {
     @ResponseBody
     @RequestMapping(value = "/question/{id}", method = RequestMethod.GET)
     public QuestionDTO findQuestionById(@PathVariable Long id){
-        System.out.println("*******************");
-        System.out.println("id: " + id);
-        System.out.println("*******************");
-        System.out.println("*******************");
-        System.out.println(questionRepository.findOne(42L));
-        System.out.println("*******************");
         return dozerBeanMapper.map(questionRepository.findOne(id), QuestionDTO.class);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/question/create", method = RequestMethod.POST)
+    public QuestionDTO createQuestion(QuestionDTO questionDTO){
+        Question question = dozerBeanMapper.map(questionDTO, Question.class);
+        return dozerBeanMapper.map(questionRepository.save(question), QuestionDTO.class);
+    }
+
+    /*
+    @RequestMapping(value = "add/{id}", method = RequestMethod.POST)
+public String addPerson(@RequestParam("name") String name, @PathVariable("id") String id)
+     */
 
 
 }
