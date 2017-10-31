@@ -33,16 +33,6 @@ public class QuestionRepositoryTest {
 
     private Question question;
 
-    @Ignore
-    @Test
-    public void find42(){
-        System.out.println("**********************************");
-        System.out.println(questionRepository.findOne(42L));
-        System.out.println(questionRepository.findAll());
-        System.out.println("**********************************");
-    }
-
-
     @Test
     public void save() {
         Theme theme = new Theme();

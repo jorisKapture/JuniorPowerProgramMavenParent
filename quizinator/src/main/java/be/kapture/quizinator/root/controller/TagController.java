@@ -9,6 +9,8 @@ import be.kapture.quizinator.root.repository.TagRepository;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +24,9 @@ public class TagController {
     private TagRepository tagRepository;
 
     @ResponseBody
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/tag", method = RequestMethod.GET)
-    public List<Tag> listAlltags(){
+    public List<Tag> listAllTags(){
         return tagRepository.findAll();
     }
 
@@ -35,23 +38,7 @@ public class TagController {
 
     @ResponseBody
     @RequestMapping(value = "/tag/create", method = RequestMethod.POST)
-    public Tag createTag(HttpServletRequest httpServletRequest){
-        Tag tag = new Tag();
-        tag.setName(httpServletRequest.getParameter("name"));
-        System.out.println("******************");
-        System.out.println(httpServletRequest.getParameter("name"));
-        System.out.println("******************");
-        System.out.println(tag);
-        System.out.println(tag.getName());
-        System.out.println(tag.getId());
-        System.out.println("******************");
-        return tagRepository.save(tag);
+    public ResponseEntity<Tag> createTag(@RequestBody Tag tag){
+        return new ResponseEntity<Tag>(tagRepository.save(tag), HttpStatus.OK);
     }
-
-    /*
-    @RequestMapping(value = "add/{id}", method = RequestMethod.POST)
-public String addPerson(@RequestParam("name") String name, @PathVariable("id") String id)
-     */
-
-
 }

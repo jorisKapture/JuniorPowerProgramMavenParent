@@ -18,6 +18,12 @@ public class Theme extends PersistentObject {
         return name;
     }
 
+    public Theme(){}
+
+    public Theme(String name) {
+        this.name = name;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
