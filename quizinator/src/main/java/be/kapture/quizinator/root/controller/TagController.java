@@ -37,9 +37,9 @@ public class TagController {
         return tagRepository.findOne(id);
     }
 
-    @ResponseBody
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/tag/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTagById(@PathVariable Long id){
         tagRepository.delete(id);
     }

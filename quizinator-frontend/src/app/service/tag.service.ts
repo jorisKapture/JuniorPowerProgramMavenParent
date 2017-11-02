@@ -20,8 +20,11 @@ export class TagService{
       .catch(this.handleError);
   }
 
-  deleteTag(id) : void{
-    this.http.delete(this.baseUrl + "/" + id);
+  deleteTag(id : number) : Promise<void>{
+    return this.http.delete(this.baseUrl + "/" + id)
+      .toPromise()
+      .then(()=>null)
+      .catch(this.handleError);
   }
 
   saveTag(tag) : Promise<Tag>{

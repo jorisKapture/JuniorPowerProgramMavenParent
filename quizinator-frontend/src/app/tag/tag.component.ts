@@ -26,6 +26,10 @@ export class TagViewComponent{
     this.tagService.saveTag(this.newTag).then(() => this.getTags());
   }
 
+  public deleteTag(id) : void{
+    this.tagService.deleteTag(id).then(()=>this.getTags());
+  }
+
   private getTags() : void{
     this.tagService.getTags().then(tags => this.tags = tags);
   }
