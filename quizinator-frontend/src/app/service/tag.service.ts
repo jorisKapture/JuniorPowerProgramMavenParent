@@ -20,8 +20,19 @@ export class TagService{
       .catch(this.handleError);
   }
 
+  deleteTag(id) : void{
+    this.http.delete(this.baseUrl + "/" + id);
+  }
+
+  saveTag(tag) : Promise<Tag>{
+    return this.http.post(this.baseUrl + "/create", tag)
+      .toPromise()
+      .then(res => res.json().data as Tag)
+      .catch(this.handleError);
+  }
+
   private handleError(error: any): Promise<any>{
-    console.error('error: ' + error.message, error);
+    // console.error('error: ' + error.message, error);
     return Promise.reject(error.message || error);
   }
 }

@@ -1,0 +1,10 @@
+<h1>tagview</h1>
+<div>
+  <input [(ngModel)]="newTag.name" placeholder="new tag">
+  <button (click)="saveTag()">Add new Tag</button>
+</div>
+<ul>
+  <li *ngFor="let tag of tags">
+    <span>{{tag.name}}</span>
+  </li>
+</ul>

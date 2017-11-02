@@ -31,12 +31,21 @@ public class TagController {
     }
 
     @ResponseBody
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/tag/{id}", method = RequestMethod.GET)
     public Tag findTagById(@PathVariable Long id){
         return tagRepository.findOne(id);
     }
 
     @ResponseBody
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/tag/{id}", method = RequestMethod.DELETE)
+    public void deleteTagById(@PathVariable Long id){
+        tagRepository.delete(id);
+    }
+
+    @ResponseBody
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/tag/create", method = RequestMethod.POST)
     public ResponseEntity<Tag> createTag(@RequestBody Tag tag){
         return new ResponseEntity<Tag>(tagRepository.save(tag), HttpStatus.OK);
