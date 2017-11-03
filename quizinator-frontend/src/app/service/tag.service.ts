@@ -35,7 +35,6 @@ export class TagService{
   }
 
   private handleError(error: any): Promise<any>{
-    // console.error('error: ' + error.message, error);
     return Promise.reject(error.message || error);
   }
 }

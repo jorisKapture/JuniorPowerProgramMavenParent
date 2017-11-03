@@ -48,6 +48,13 @@ public class TagController {
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/tag/create", method = RequestMethod.POST)
     public ResponseEntity<Tag> createTag(@RequestBody Tag tag){
-        return new ResponseEntity<Tag>(tagRepository.save(tag), HttpStatus.OK);
+        Tag savedTag = null;
+        try{
+            savedTag = tagRepository.save(tag);
+        } catch (Exception e){
+            savedTag = tagRepository.findByName(tag.getName());
+            return new ResponseEntity<Tag>(savedTag, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        return new ResponseEntity<Tag>(savedTag, HttpStatus.OK);
     }
 }
