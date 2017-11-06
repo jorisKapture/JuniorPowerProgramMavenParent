@@ -18,10 +18,10 @@ public class QuestionService {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private ThemeRepository themeRepository;
+    private ThemeService themeService;
 
     @Autowired
-    private TagRepository tagRepository;
+    private TagService tagService;
 
     public Question findQuestion(Long id){
         return questionRepository.findOne(id);
@@ -33,7 +33,7 @@ public class QuestionService {
 
     public Question saveQuestion(Question question, String themeName, List<String> tagStrings) {
 
-        Theme theme = themeRepository.findByName(themeName);
+        Theme theme = themeService.findByName(themeName);
         if (theme == null){
             throw new IllegalArgumentException("themeName does not exists");
         }
@@ -45,14 +45,13 @@ public class QuestionService {
     }
 
     private Tag getTag(String name) {
-        Tag existingTag = tagRepository.findByName(name);
+        Tag existingTag = tagService.findByName(name);
         if (existingTag != null) {
             return existingTag;
         } else {
             Tag newTag = new Tag();
             newTag.setName(name);
-            tagRepository.save(newTag);
-            return newTag;
+            return tagService.save(newTag);
         }
     }
 }

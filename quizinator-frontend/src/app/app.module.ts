@@ -7,6 +7,8 @@ import {RouterModule} from "@angular/router";
 import { AppComponent } from './app.component';
 import { InputViewComponent} from "./input/inputview.component";
 import { TagViewComponent} from "./tag/tag.component";
+import { ThemeViewComponent} from "./theme/theme.component";
+import { QuestionViewComponent} from "./question/question.component";
 import {AppRouting} from "./common/app.routing";
 import {TagService} from "./service/tag.service";
 
@@ -14,7 +16,9 @@ import {TagService} from "./service/tag.service";
   declarations: [
     AppComponent,
     InputViewComponent,
-    TagViewComponent
+    TagViewComponent,
+    ThemeViewComponent,
+    QuestionViewComponent
   ],
   imports: [
     BrowserModule,

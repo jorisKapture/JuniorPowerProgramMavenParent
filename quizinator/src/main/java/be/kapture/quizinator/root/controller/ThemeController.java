@@ -2,8 +2,8 @@ package be.kapture.quizinator.root.controller;
 
 import be.kapture.quizinator.root.model.Tag;
 import be.kapture.quizinator.root.model.Theme;
-import be.kapture.quizinator.root.repository.TagRepository;
-import be.kapture.quizinator.root.repository.ThemeRepository;
+import be.kapture.quizinator.root.service.TagService;
+import be.kapture.quizinator.root.service.ThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,23 +16,40 @@ import java.util.List;
 @RequestMapping()
 public class ThemeController {
     @Autowired
-    private ThemeRepository themeRepository;
+    private ThemeService themeService;
 
     @ResponseBody
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/theme", method = RequestMethod.GET)
     public List<Theme> listAllThemes(){
-        return themeRepository.findAll();
+        return themeService.findAll();
     }
 
     @ResponseBody
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/theme/{id}", method = RequestMethod.GET)
     public Theme findThemeById(@PathVariable Long id){
-        return themeRepository.findOne(id);
+        return themeService.findOne(id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/theme/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteThemeById(@PathVariable Long id){
+        themeService.delete(id);
     }
 
     @ResponseBody
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/theme/create", method = RequestMethod.POST)
-    public ResponseEntity<Theme> createTheme(@RequestBody Theme theme){
-        return new ResponseEntity<Theme>(themeRepository.save(theme), HttpStatus.OK);
+    public ResponseEntity<Theme> createTag(@RequestBody Theme theme){
+        Theme savedTheme;
+        try{
+            savedTheme = themeService.save(theme);
+        } catch (Exception e){
+            savedTheme = themeService.findByName(theme.getName());
+            return new ResponseEntity<>(savedTheme, HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        return new ResponseEntity<>(savedTheme, HttpStatus.OK);
     }
 }

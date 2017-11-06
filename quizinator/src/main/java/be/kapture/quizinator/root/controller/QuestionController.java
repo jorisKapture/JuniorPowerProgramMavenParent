@@ -24,18 +24,21 @@ public class QuestionController {
     private DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
 
     @ResponseBody
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/question", method = RequestMethod.GET)
     public List<QuestionDTO> listAllQuestions(){
         return dozerBeanMultimapper.mapCollection(questionRepository.findAll(), QuestionDTO.class);
     }
 
     @ResponseBody
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/question/{id}", method = RequestMethod.GET)
     public QuestionDTO findQuestionById(@PathVariable Long id){
         return dozerBeanMapper.map(questionRepository.findOne(id), QuestionDTO.class);
     }
 
     @ResponseBody
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/question/create", method = RequestMethod.POST)
     public QuestionDTO createQuestion(QuestionDTO questionDTO){
         Question question = dozerBeanMapper.map(questionDTO, Question.class);

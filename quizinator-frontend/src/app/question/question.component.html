@@ -1,0 +1,11 @@
+<h1>questionview</h1>
+<div>
+  <input [(ngModel)]="newQuestion.name" placeholder="new question">
+  <button (click)="saveQuestion()">Add new Question</button>
+</div>
+<ul>
+  <li *ngFor="let question of questions">
+    <span>{{question.name}}</span>
+    <button (click)="deleteQuestion(question.id)">delete</button>
+  </li>
+</ul>

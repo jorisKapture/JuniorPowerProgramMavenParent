@@ -1,0 +1,11 @@
+<h1>themeview</h1>
+<div>
+  <input [(ngModel)]="newTheme.name" placeholder="new theme">
+  <button (click)="saveTheme()">Add new Theme</button>
+</div>
+<ul>
+  <li *ngFor="let theme of themes">
+    <span>{{theme.name}}</span>
+    <button (click)="deleteTheme(theme.id)">delete</button>
+  </li>
+</ul>

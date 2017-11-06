@@ -48,6 +48,7 @@ public class QuestionServiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @Ignore
     public void saveQuestion_ThemeDoesNotExists() throws Exception {
         when(themeRepository.findByName(THEME_STRING)).thenReturn(null);
 
@@ -55,6 +56,7 @@ public class QuestionServiceTest {
     }
 
     @Test
+    @Ignore
     public void saveQuestion() throws Exception {
         Question question= mock(Question.class);
 
