@@ -6,6 +6,8 @@ import be.kapture.quizinator.root.model.Question;
 import be.kapture.quizinator.root.repository.QuestionRepository;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,18 +39,19 @@ public class QuestionController {
         return dozerBeanMapper.map(questionRepository.findOne(id), QuestionDTO.class);
     }
 
+
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/question/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteQuestionById(@PathVariable Long id){
+        questionRepository.delete(id);
+    }
+
     @ResponseBody
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/question/create", method = RequestMethod.POST)
-    public QuestionDTO createQuestion(QuestionDTO questionDTO){
+    public ResponseEntity<QuestionDTO> createQuestion(@RequestBody QuestionDTO questionDTO){
         Question question = dozerBeanMapper.map(questionDTO, Question.class);
-        return dozerBeanMapper.map(questionRepository.save(question), QuestionDTO.class);
+        return new ResponseEntity<>(dozerBeanMapper.map(questionRepository.save(question), QuestionDTO.class), HttpStatus.OK);
     }
-
-    /*
-    @RequestMapping(value = "add/{id}", method = RequestMethod.POST)
-public String addPerson(@RequestParam("name") String name, @PathVariable("id") String id)
-     */
-
-
 }

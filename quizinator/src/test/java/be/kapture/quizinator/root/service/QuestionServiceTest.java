@@ -66,6 +66,8 @@ public class QuestionServiceTest {
         inOrder.verify(question).setTheme(THEME);
         inOrder.verify(question).setTags(asList(TAG1, TAG2));
         inOrder.verify(questionRepository).save(question);
+
+        questionService.deleteQuestion(question.getId());
     }
 
     @Ignore
@@ -82,6 +84,7 @@ public class QuestionServiceTest {
         inOrder.verify(question).setTheme(THEME);
         inOrder.verify(question).setTags(asList(TAG1, TAG_NEW));
         inOrder.verify(questionRepository).save(question);
+        questionService.deleteQuestion(question.getId());
     }
 
 

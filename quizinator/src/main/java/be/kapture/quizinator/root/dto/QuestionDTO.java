@@ -1,6 +1,7 @@
 package be.kapture.quizinator.root.dto;
 
 import be.kapture.quizinator.root.model.Tag;
+import be.kapture.quizinator.root.model.Theme;
 
 import java.util.List;
 
@@ -15,6 +16,16 @@ public class QuestionDTO {
     private String url;
 
     private List<Tag> tags;
+
+    private Theme theme;
+
+    public Theme getTheme() {
+        return theme;
+    }
+
+    public void setTheme(Theme theme) {
+        this.theme = theme;
+    }
 
     public List<Tag> getTags() {
         return tags;

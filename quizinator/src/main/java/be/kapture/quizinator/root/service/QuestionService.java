@@ -31,6 +31,10 @@ public class QuestionService {
         questionRepository.save(question);
     }
 
+    public void deleteQuestion(Long id){
+        questionRepository.delete(id);
+    }
+
     public Question saveQuestion(Question question, String themeName, List<String> tagStrings) {
 
         Theme theme = themeService.findByName(themeName);

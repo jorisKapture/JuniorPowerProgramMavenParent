@@ -41,6 +41,8 @@ public class QuestionTest {
         assertThat(foundQuestion.getQuestion(), is(question.getQuestion()));
         assertThat(foundQuestion.getAnswer(), is(question.getAnswer()));
         assertThat(foundQuestion.getUrl(), is(question.getUrl()));
+
+        questionService.deleteQuestion(question.getId());
     }
 
 }

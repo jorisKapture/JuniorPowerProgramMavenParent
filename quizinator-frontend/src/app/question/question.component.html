@@ -1,11 +1,62 @@
 <h1>questionview</h1>
-<div>
-  <input [(ngModel)]="newQuestion.name" placeholder="new question">
+
+<div style="margin: 10px;">
+  <input [(ngModel)]="newQuestion.question" placeholder="question">
+  <input [(ngModel)]="newQuestion.answer" placeholder="answer">
+  <input [(ngModel)]="newQuestion.url" placeholder="url">
+  <select [(ngModel)]="newQuestion.theme">
+    <option *ngFor="let theme of themes" [ngValue]="theme">{{theme.name}}</option>
+  </select>
+  <br>
+  <select [(ngModel)]="newTag">
+    <option *ngFor="let tag of tags" [ngValue]="tag">{{tag.name}}</option>
+  </select>
+  <input [(ngModel)]="newTagName" style="display: none;">
+  <button (click)="addTagToNewQuestion()">Add Tag</button>
+  <br>
+  <span *ngFor="let tag of newQuestion.tags; let i = index;">
+    {{tag.name}} <button (click)="removeTagFromNewQuestion(i);">x</button> |
+  </span>
+  <br>
   <button (click)="saveQuestion()">Add new Question</button>
 </div>
 <ul>
   <li *ngFor="let question of questions">
-    <span>{{question.name}}</span>
-    <button (click)="deleteQuestion(question.id)">delete</button>
+    <ul>
+      <li>{{question.question}}</li>
+      <li>{{question.answer}}</li>
+      <li>{{question.url}}</li>
+      <li>{{question.theme.name}}</li>
+      <li>
+        <ul>
+          <li *ngFor="let tag of question.tags">
+            {{tag.name}}
+          </li>
+        </ul>
+      </li>
+      <li><button (click)="deleteQuestion(question.id)">delete</button></li>
+    </ul>
   </li>
 </ul>
+
+<div class="container questions striped">
+  <div class="row m-2 p-1" *ngFor="let question of questions">
+    <div class="col">
+      <div class="row">
+        <div class="col"><strong>{{question.question}}</strong></div>
+        <div *ngIf="question.url" class="col"><strong>{{question.url}}</strong></div>
+      </div>
+      <div class="row">
+        <div class="col-auto theme">
+          <small> | {{question.theme.name}} | </small>
+        </div>
+        <div class="col tag">
+          <small *ngFor="let tag of question.tags"> {{tag.name}} </small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col answer">{{question.answer}}</div>
+      </div>
+    </div>
+  </div>
+</div>
