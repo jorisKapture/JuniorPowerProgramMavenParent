@@ -20,7 +20,7 @@
   <br>
   <button (click)="saveQuestion()">Add new Question</button>
 </div>
-<ul>
+<ul style="display: none;">
   <li *ngFor="let question of questions">
     <ul>
       <li>{{question.question}}</li>
@@ -40,11 +40,27 @@
 </ul>
 
 <div class="container questions striped">
-  <div class="row m-2 p-1" *ngFor="let question of questions">
+  <div class="row m-2 p-1">
+    <div class="col-auto align-self-end"></div>
+    <div class="col align-content-end">
+      show all answers <input type="checkbox" autocomplete="off" [(ngModel)]="answersShown" (ngModelChange)="showAnswers()">
+    </div>
+  </div>
+  <div class="row m-2 p-1" *ngFor="let question of questions; index as i">
     <div class="col">
       <div class="row">
-        <div class="col"><strong>{{question.question}}</strong></div>
-        <div *ngIf="question.url" class="col"><strong>{{question.url}}</strong></div>
+        <div class="col"><input [(ngModel)]="question.question" [disabled]="editEnabled[i]? null : 'disabled'"></div>
+        <div class="col"><input [(ngModel)]="question.url" [disabled]="editEnabled[i]? null : 'disabled'"></div>
+        <div class="col-auto align-content-end align-self-end">
+          <small>
+            show answer <input type="checkbox" autocomplete="off" [(ngModel)]="answerShown[i]">
+          </small>
+          <div class="align-self-end">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            <input type="checkbox" autocomplete="off" [(ngModel)]="editEnabled[i]">
+            <i class="fa fa-floppy-o" (click)="updateQuestion(i)" *ngIf="editEnabled[i]"></i>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-auto theme">
@@ -55,7 +71,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col answer">{{question.answer}}</div>
+        <!--<div class="col"><input [(ngModel)]="question.url" [disabled]="editEnabled[i]? null : 'disabled'"></div>-->
+        <div class="col answer" *ngIf="answerShown[i]; else elseBlock">
+          <input [(ngModel)]="question.answer" [disabled]="editEnabled[i]? null : 'disabled'"></div>
+        <ng-template #elseBlock>*****</ng-template>
       </div>
     </div>
   </div>

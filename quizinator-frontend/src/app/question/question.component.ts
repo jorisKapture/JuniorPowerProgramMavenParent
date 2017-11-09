@@ -1,4 +1,4 @@
-import {Component} from '@angular/core'
+import {Component, Input} from '@angular/core'
 import {Question} from "../model/question";
 import {QuestionService} from "../service/question.service";
 import {Subscription} from "rxjs/Subscription";
@@ -20,12 +20,21 @@ export class QuestionViewComponent{
   private questions : Question[];
   private themes : Theme[];
   private tags : Tag[];
+  private answerShown : boolean[] = [];
+  private editEnabled : boolean[] = [];
+  private answersShown : boolean = false;
   private newTag : Tag;
   private newTagName : string;
   private newQuestion : Question = new Question;
+  private editing : boolean = false;
 
   constructor(private questionService: QuestionService, private router : Router, private themeService: ThemeService, private tagService : TagService){
-    this.newQuestion.tags = [];
+  }
+
+  public showAnswers() : void{
+    for(var i = 0; i<this.questions.length;i++){
+      this.answerShown[i]= this.answersShown;
+    }
   }
 
   public addTagToNewQuestion(){
@@ -43,7 +52,12 @@ export class QuestionViewComponent{
     this.newQuestion.tags.splice(index, 1);
   }
 
+  public updateQuestion(i):void{
+    console.log("here be updating of " + i);
+  }
+
   ngOnInit(): void {
+    this.newQuestion.tags = [];
     this.getQuestions();
     this.getThemes();
     this.getTags();
