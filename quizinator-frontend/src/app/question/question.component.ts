@@ -73,6 +73,9 @@ export class QuestionViewComponent{
 
   private getQuestions() : void{
     this.questionService.getQuestions().then(questions => this.questions = questions);
+    this.newQuestion.question = "";
+    this.newQuestion.answer = "";
+    this.newQuestion.url = "";
   }
 
   private getThemes() : void{
