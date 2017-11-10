@@ -52,8 +52,8 @@ export class QuestionViewComponent{
     this.newQuestion.tags.splice(index, 1);
   }
 
-  public updateQuestion(i):void{
-    console.log("here be updating of " + i);
+  public updateQuestion(question):void{
+    this.questionService.saveQuestion(question).then(() => this.getQuestions());
   }
 
   ngOnInit(): void {

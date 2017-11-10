@@ -20,24 +20,6 @@
   <br>
   <button (click)="saveQuestion()">Add new Question</button>
 </div>
-<ul style="display: none;">
-  <li *ngFor="let question of questions">
-    <ul>
-      <li>{{question.question}}</li>
-      <li>{{question.answer}}</li>
-      <li>{{question.url}}</li>
-      <li>{{question.theme.name}}</li>
-      <li>
-        <ul>
-          <li *ngFor="let tag of question.tags">
-            {{tag.name}}
-          </li>
-        </ul>
-      </li>
-      <li><button (click)="deleteQuestion(question.id)">delete</button></li>
-    </ul>
-  </li>
-</ul>
 
 <div class="container questions striped">
   <div class="row m-2 p-1">
@@ -58,7 +40,8 @@
           <div class="align-self-end">
             <i class="fa fa-pencil" aria-hidden="true"></i>
             <input type="checkbox" autocomplete="off" [(ngModel)]="editEnabled[i]">
-            <i class="fa fa-floppy-o" (click)="updateQuestion(i)" *ngIf="editEnabled[i]"></i>
+            <i class="fa fa-floppy-o" (click)="updateQuestion(question)" *ngIf="editEnabled[i]"></i>
+            <i class="fa fa-trash" (click)="deleteQuestion(question.id)" *ngIf="editEnabled[i]"></i>
           </div>
         </div>
       </div>
@@ -71,7 +54,6 @@
         </div>
       </div>
       <div class="row">
-        <!--<div class="col"><input [(ngModel)]="question.url" [disabled]="editEnabled[i]? null : 'disabled'"></div>-->
         <div class="col answer" *ngIf="answerShown[i]; else elseBlock">
           <input [(ngModel)]="question.answer" [disabled]="editEnabled[i]? null : 'disabled'"></div>
         <ng-template #elseBlock>*****</ng-template>
