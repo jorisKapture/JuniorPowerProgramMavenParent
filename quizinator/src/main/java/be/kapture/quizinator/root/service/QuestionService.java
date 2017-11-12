@@ -14,14 +14,22 @@ import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
-    @Autowired
-    private QuestionRepository questionRepository;
+    private final ThemeService themeService;
+    private final TagService tagService;
+
+    private final QuestionRepository questionRepository;
 
     @Autowired
-    private ThemeService themeService;
+    public QuestionService(QuestionRepository questionRepository, ThemeService themeService, TagService tagService) {
+        this.questionRepository = questionRepository;
+        this.themeService = themeService;
+        this.tagService = tagService;
+    }
 
-    @Autowired
-    private TagService tagService;
+    public List<Question> findQuestions(long tagId){
+        Tag tag = tagId == 0 ? null : tagService.findOrThrow(tagId);
+        return questionRepository.findByTags(tag);
+    }
 
     public Question findQuestion(Long id){
         return questionRepository.findOne(id);
@@ -35,18 +43,18 @@ public class QuestionService {
         questionRepository.delete(id);
     }
 
-    public Question saveQuestion(Question question, String themeName, List<String> tagStrings) {
-
-        Theme theme = themeService.findByName(themeName);
-        if (theme == null){
-            throw new IllegalArgumentException("themeName does not exists");
-        }
-        question.setTheme(theme);
-        List<Tag> tags = tagStrings.stream().map(name -> getTag(name)).collect(Collectors.toList());
-        question.setTags(tags);
-        questionRepository.save(question);
-        return question;
-    }
+//    public Question saveQuestion(Question question, String themeName, List<String> tagStrings) {
+//
+//        Theme theme = themeService.findByName(themeName);
+//        if (theme == null){
+//            throw new IllegalArgumentException("themeName does not exists");
+//        }
+//        question.setTheme(theme);
+//        List<Tag> tags = tagStrings.stream().map(name -> getTag(name)).collect(Collectors.toList());
+//        question.setTags(tags);
+//        questionRepository.save(question);
+//        return question;
+//    }
 
     private Tag getTag(String name) {
         Tag existingTag = tagService.findByName(name);

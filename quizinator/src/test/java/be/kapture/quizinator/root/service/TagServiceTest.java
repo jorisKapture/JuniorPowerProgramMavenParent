@@ -1,24 +1,20 @@
 package be.kapture.quizinator.root.service;
 
 import be.kapture.quizinator.root.model.Tag;
-import be.kapture.quizinator.root.model.Theme;
 import be.kapture.quizinator.root.repository.TagRepository;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TagServiceTest {
-    private static final String NAME = "ietske";
+    private static final Tag TAG = new Tag("ietske");
 
     @InjectMocks
     private TagService tagService;
@@ -27,13 +23,18 @@ public class TagServiceTest {
     private TagRepository tagRepository;
 
     @Test
-    @Ignore
-    public void save() throws Exception {
-        Tag savedTag = tagService.save(NAME);
+    public void findOrThrow() throws Exception {
+        when(tagRepository.findOne(1L)).thenReturn(TAG);
 
-        assertThat(savedTag.getName(), is(NAME));
-        verify(tagRepository).save(savedTag);
-        tagService.delete(savedTag.getId());
+        assertThat(tagService.findOrThrow(1L)).isEqualTo(TAG);
+    }
+
+
+    @Test
+    public void findOrThrow_NotFound() throws Exception {
+        when(tagRepository.findOne(1L)).thenReturn(null);
+
+        assertThatCode(() -> tagService.findOrThrow(1L)).isInstanceOf(IllegalArgumentException.class);
     }
 
 }

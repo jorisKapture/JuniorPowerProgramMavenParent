@@ -27,6 +27,13 @@
     <div class="col align-content-end">
       show all answers <input type="checkbox" autocomplete="off" [(ngModel)]="answersShown" (ngModelChange)="showAnswers()">
     </div>
+    <div class="col align-content-center">
+      <label title="tag:">
+        <select [(ngModel)]="filterTag" (change)="changeFilter()">
+          <option *ngFor="let tag of tags" [ngValue]="tag">{{tag.name}}</option>
+        </select>
+      </label>
+    </div>
   </div>
   <div class="row m-2 p-1" *ngFor="let question of questions; index as i">
     <div class="col">

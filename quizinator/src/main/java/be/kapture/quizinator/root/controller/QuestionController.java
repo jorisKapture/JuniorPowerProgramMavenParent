@@ -3,7 +3,11 @@ package be.kapture.quizinator.root.controller;
 import be.kapture.quizinator.root.dto.QuestionDTO;
 import be.kapture.quizinator.root.mapper.DozerBeanMultimapper;
 import be.kapture.quizinator.root.model.Question;
+import be.kapture.quizinator.root.model.Tag;
 import be.kapture.quizinator.root.repository.QuestionRepository;
+import be.kapture.quizinator.root.repository.TagRepository;
+import be.kapture.quizinator.root.service.QuestionService;
+import be.kapture.quizinator.root.service.TagService;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,14 +20,21 @@ import java.util.List;
 @Controller
 @RequestMapping()
 public class QuestionController {
-    @Autowired
-    private QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
-    @Autowired
-    private DozerBeanMultimapper dozerBeanMultimapper;
+    private final QuestionRepository questionRepository;
+
+    private final DozerBeanMultimapper dozerBeanMultimapper;
 
 
     private DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
+
+    @Autowired
+    public QuestionController(QuestionRepository questionRepository, DozerBeanMultimapper dozerBeanMultimapper, QuestionService questionService) {
+        this.questionRepository = questionRepository;
+        this.dozerBeanMultimapper = dozerBeanMultimapper;
+        this.questionService = questionService;
+    }
 
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -37,6 +48,13 @@ public class QuestionController {
     @RequestMapping(value = "/question/{id}", method = RequestMethod.GET)
     public QuestionDTO findQuestionById(@PathVariable Long id){
         return dozerBeanMapper.map(questionRepository.findOne(id), QuestionDTO.class);
+    }
+
+    @ResponseBody
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/question/tag/{tagId}", method = RequestMethod.GET)
+    public List<QuestionDTO> findQuestionByTag(@PathVariable Long tagId){
+        return dozerBeanMultimapper.mapCollection(questionService.findQuestions(tagId), QuestionDTO.class);
     }
 
 

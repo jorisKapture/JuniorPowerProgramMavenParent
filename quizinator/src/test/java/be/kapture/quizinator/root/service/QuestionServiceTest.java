@@ -7,26 +7,32 @@ import be.kapture.quizinator.root.repository.QuestionRepository;
 import be.kapture.quizinator.root.repository.TagRepository;
 import be.kapture.quizinator.root.repository.ThemeRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static be.kapture.quizinator.root.model.builder.QuestionBuilder.aQuestion;
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.isNotNull;
-import static org.mockito.Mockito.*;
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionServiceTest {
     private static final String THEME_STRING = "theme";
     private static final Tag TAG1 = aTag(1L, "name1");
+    private static final Question QUESTION1 = aQuestion().withTags(singletonList(TAG1)).build();
+    private static final Question QUESTION2 = aQuestion().withTags(singletonList(TAG1)).build();
     private static final Tag TAG2 = aTag(2L, "name2");
-    private static final Tag TAG_NEW = aTag(3L, "newTag");
+    //private static final Tag TAG_NEW = aTag(3L, "newTag");
     private static final Theme THEME = aTheme(1L);
+    private static final IllegalArgumentException TAG_NOT_FOUND_EXCEPTION = new IllegalArgumentException("not allowed");
 
     @InjectMocks
     private QuestionService questionService;
@@ -37,8 +43,10 @@ public class QuestionServiceTest {
     private ThemeRepository themeRepository;
     @Mock
     private TagRepository tagRepository;
-    @Captor
-    private ArgumentCaptor<Tag> newTagCaptor;
+    @Mock
+    private TagService tagService;
+//    @Captor
+//    private ArgumentCaptor<Tag> newTagCaptor;
 
     @Before
     public void setUp() throws Exception {
@@ -47,45 +55,69 @@ public class QuestionServiceTest {
         when(tagRepository.findByName(TAG2.getName())).thenReturn(TAG2);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    @Ignore
-    public void saveQuestion_ThemeDoesNotExists() throws Exception {
-        when(themeRepository.findByName(THEME_STRING)).thenReturn(null);
+    @Test
+    public void findQuestions(){
+        when(tagService.findOrThrow(1L)).thenReturn(TAG1);
+        when(questionRepository.findByTags(TAG1)).thenReturn(asList(QUESTION1, QUESTION2));
 
-        questionService.saveQuestion(new Question(), THEME_STRING, asList("tag1","tag2"));
+        assertThat(questionService.findQuestions(1L)).contains(QUESTION1, QUESTION2);
     }
 
     @Test
-    @Ignore
-    public void saveQuestion() throws Exception {
-        Question question= mock(Question.class);
+    public void findQuestions_NoTagId(){
+        when(questionRepository.findByTags(null)).thenReturn(asList(QUESTION1, QUESTION2));
 
-        questionService.saveQuestion(question, THEME.getName(), asList(TAG1.getName(), TAG2.getName()));
+        assertThat(questionService.findQuestions(0L)).contains(QUESTION1, QUESTION2);
 
-        InOrder inOrder = inOrder(question, questionRepository);
-        inOrder.verify(question).setTheme(THEME);
-        inOrder.verify(question).setTags(asList(TAG1, TAG2));
-        inOrder.verify(questionRepository).save(question);
-
-        questionService.deleteQuestion(question.getId());
+        verifyZeroInteractions(tagService);
     }
 
-    @Ignore
     @Test
-    public void saveQuestion_NewTag() throws Exception {
-        String newTagName = "newTag";
+    public void findQuestions_IllegalTagId(){
+        when(tagService.findOrThrow(1L)).thenThrow(TAG_NOT_FOUND_EXCEPTION);
+        when(questionRepository.findByTags(TAG1)).thenReturn(asList(QUESTION1, QUESTION2));
 
-        when(tagRepository.save(newTagCaptor.capture())).thenReturn(TAG_NEW);
-        Question question= mock(Question.class);
-
-        questionService.saveQuestion(question, THEME.getName(), asList(TAG1.getName(), newTagName));
-
-        InOrder inOrder = inOrder(question, questionRepository);
-        inOrder.verify(question).setTheme(THEME);
-        inOrder.verify(question).setTags(asList(TAG1, TAG_NEW));
-        inOrder.verify(questionRepository).save(question);
-        questionService.deleteQuestion(question.getId());
+        assertThatCode(() -> questionService.findQuestions(1L)).isEqualTo(TAG_NOT_FOUND_EXCEPTION);
     }
+
+//    @Test(expected = IllegalArgumentException.class)
+//    @Ignore
+//    public void saveQuestion_ThemeDoesNotExists() throws Exception {
+//        when(themeRepository.findByName(THEME_STRING)).thenReturn(null);
+//
+//        questionService.saveQuestion(new Question(), THEME_STRING, asList("tag1","tag2"));
+//    }
+//
+//    @Test
+//    public void saveQuestion() throws Exception {
+//        Question question= mock(Question.class);
+//
+//        questionService.saveQuestion(question, THEME.getName(), asList(TAG1.getName(), TAG2.getName()));
+//
+//        InOrder inOrder = inOrder(question, questionRepository);
+//        inOrder.verify(question).setTheme(THEME);
+//        inOrder.verify(question).setTags(asList(TAG1, TAG2));
+//        inOrder.verify(questionRepository).save(question);
+//
+//        questionService.deleteQuestion(question.getId());
+//    }
+//
+//    @Ignore
+//    @Test
+//    public void saveQuestion_NewTag() throws Exception {
+//        String newTagName = "newTag";
+//
+//        when(tagRepository.save(newTagCaptor.capture())).thenReturn(TAG_NEW);
+//        Question question= mock(Question.class);
+//
+//        questionService.saveQuestion(question, THEME.getName(), asList(TAG1.getName(), newTagName));
+//
+//        InOrder inOrder = inOrder(question, questionRepository);
+//        inOrder.verify(question).setTheme(THEME);
+//        inOrder.verify(question).setTags(asList(TAG1, TAG_NEW));
+//        inOrder.verify(questionRepository).save(question);
+//        questionService.deleteQuestion(question.getId());
+//    }
 
 
     private static Tag aTag(Long id, String name) {

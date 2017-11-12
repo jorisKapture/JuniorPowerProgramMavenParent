@@ -20,6 +20,13 @@ export class QuestionService{
       .catch(this.handleError);
   }
 
+  getQuestionsByTag(id: number): Promise<Question[]> {
+    return this.http.get(`${this.baseUrl}/tag/${id}` )
+      .toPromise()
+      .then(response => response.json() as Question[])
+      .catch(this.handleError);
+  }
+
   deleteQuestion(id : number) : Promise<void>{
     return this.http.delete(this.baseUrl + "/" + id)
       .toPromise()
