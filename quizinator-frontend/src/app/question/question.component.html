@@ -38,8 +38,9 @@
   <div class="row m-2 p-1" *ngFor="let question of questions; index as i">
     <div class="col">
       <div class="row">
-        <div class="col"><input [(ngModel)]="question.question" [disabled]="editEnabled[i]? null : 'disabled'"></div>
-        <div class="col"><input [(ngModel)]="question.url" [disabled]="editEnabled[i]? null : 'disabled'"></div>
+        <div class="col"><textarea [(ngModel)]="question.question" [disabled]="editEnabled[i]? null : 'disabled'"></textarea></div>
+        <a href="{{question.url}}" *ngIf="(!editEnabled[i])&&(!!question.url)">link</a>
+        <div class="col"><input [(ngModel)]="question.url" *ngIf="editEnabled[i]"></div>
         <div class="col-auto align-content-end align-self-end">
           <small>
             show answer <input type="checkbox" autocomplete="off" [(ngModel)]="answerShown[i]">
