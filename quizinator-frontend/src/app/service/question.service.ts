@@ -7,6 +7,7 @@ import "rxjs/operator/catch";
 import "rxjs/operator/map";
 import "rxjs/Rx";
 import 'rxjs/add/operator/toPromise';
+import {SearchFilter} from "../question/question.searchfilter";
 
 @Injectable()
 export class QuestionService{
@@ -15,6 +16,13 @@ export class QuestionService{
 
   getQuestions(): Promise<Question[]>{
     return this.http.get(this.baseUrl)
+      .toPromise()
+      .then(response => response.json() as Question[])
+      .catch(this.handleError);
+  }
+
+  getQuestionsByFilter(searchfilter : SearchFilter): Promise<Question[]>{
+    return this.http.post(this.baseUrl + "/find", searchfilter)
       .toPromise()
       .then(response => response.json() as Question[])
       .catch(this.handleError);

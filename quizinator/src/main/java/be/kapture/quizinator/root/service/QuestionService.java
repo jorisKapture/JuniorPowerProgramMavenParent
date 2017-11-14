@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class QuestionService {
     private final ThemeService themeService;
@@ -26,20 +29,20 @@ public class QuestionService {
         this.tagService = tagService;
     }
 
-    public List<Question> findQuestions(long tagId){
+    public List<Question> findQuestions(long tagId) {
         Tag tag = tagId == 0 ? null : tagService.findOrThrow(tagId);
         return questionRepository.findByTags(tag);
     }
 
-    public Question findQuestion(Long id){
+    public Question findQuestion(Long id) {
         return questionRepository.findOne(id);
     }
 
-    public void saveQuestion(Question question){
+    public void saveQuestion(Question question) {
         questionRepository.save(question);
     }
 
-    public void deleteQuestion(Long id){
+    public void deleteQuestion(Long id) {
         questionRepository.delete(id);
     }
 
@@ -65,5 +68,12 @@ public class QuestionService {
             newTag.setName(name);
             return tagService.save(newTag);
         }
+    }
+
+    public List<Question> find(Long themeId, List<Long> tagIds) {
+        Theme theme = (themeId == null) ? null : themeService.findOrThrow(themeId);
+        List<Tag> tags = tagIds.stream().map(tagService::findOrThrow).collect(toList());
+
+        return questionRepository.find(theme, tags);
     }
 }

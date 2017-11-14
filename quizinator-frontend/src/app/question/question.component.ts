@@ -8,6 +8,7 @@ import {ThemeService} from '../service/theme.service';
 import {Theme} from '../model/theme';
 import {TagService} from '../service/tag.service';
 import {Tag} from '../model/tag';
+import {SearchFilter} from "./question.searchfilter";
 
 @Component({
   selector: 'article',
@@ -29,6 +30,7 @@ export class QuestionViewComponent implements OnInit {
   private newQuestion: Question = new Question;
   filterTag: Tag;
   private editing: false;
+  private searchfilter : SearchFilter = new SearchFilter;
 
   constructor(private questionService: QuestionService, private router: Router, private themeService: ThemeService,
               private tagService: TagService) {
@@ -72,6 +74,7 @@ export class QuestionViewComponent implements OnInit {
     this.getQuestions();
     this.getThemes();
     this.getTags();
+    this.searchfilter.tags = [];
   }
 
   public saveQuestion(): void {

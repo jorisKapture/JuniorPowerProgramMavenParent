@@ -28,6 +28,21 @@ public class ThemeServiceTest {
     private ThemeRepository themeRepository;
 
     @Test
+    public void findOrThrow() throws Exception {
+        when(themeRepository.findOne(THEME1.getId())).thenReturn(THEME1);
+
+        assertThat(themeService.findOrThrow(THEME1.getId()), is(THEME1));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findOrThrow_Absent() throws Exception {
+        when(themeRepository.findOne(1L)).thenReturn(null);
+
+        themeService.findOrThrow(1L);
+    }
+
+
+    @Test
     @Ignore
     public void save() throws Exception {
         Theme savedTheme = themeService.save(NAME);

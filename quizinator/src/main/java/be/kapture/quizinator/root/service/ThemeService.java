@@ -40,4 +40,11 @@ public class ThemeService {
         return themeRepository.findByName(name);
     }
 
+    public Theme findOrThrow(Long id) {
+        Theme theme = themeRepository.findOne(id);
+        if(null == theme){
+            throw new IllegalArgumentException();
+        }
+        return theme;
+    }
 }

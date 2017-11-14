@@ -4,10 +4,8 @@ import be.kapture.quizinator.root.Main;
 import be.kapture.quizinator.root.repository.QuestionRepository;
 import be.kapture.quizinator.root.repository.TagRepository;
 import be.kapture.quizinator.root.repository.ThemeRepository;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static be.kapture.quizinator.root.model.builder.QuestionBuilder.aQuestion;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -41,32 +39,40 @@ public class QuestionRepositoryTest {
     @Autowired
     private ThemeRepository themeRepository;
 
-    private Theme theme;
-    private Tag tag, otherTag;
+    private Theme theme1, themeOther;
+    private Tag tag1, tag2, otherTag;
 
     @Before
     public void setUp() throws Exception {
-        theme = new Theme();
-        theme.setName("theme");
+        theme1 = new Theme();
+        theme1.setName("theme1");
 
-        tag = aTag("tag");
+        themeOther= new Theme();
+        themeOther.setName("themeOther");
+
+        tag1 = aTag("tag1");
+        tag2 = aTag("tag2");
         otherTag = aTag("otherTag");
-        tagRepository.save(tag);
+        tagRepository.save(tag1);
+        tagRepository.save(tag2);
         tagRepository.save(otherTag);
-        themeRepository.save(theme);
+        themeRepository.save(theme1);
+        themeRepository.save(themeOther);
     }
 
     @After
     public void tearDown() throws Exception {
         questionRepository.deleteAll();
-        tagRepository.delete(tag);
+        tagRepository.delete(tag1);
+        tagRepository.delete(tag2);
         tagRepository.delete(otherTag);
-        themeRepository.delete(theme);
+        themeRepository.delete(theme1);
+        themeRepository.delete(themeOther);
     }
 
     @Test
     public void save() {
-        Question question = aQuestion().withQuestion("question").withAnswer("42").withUrl("url").withTheme(theme).addTag(tag).build();
+        Question question = aQuestion().withQuestion("question").withAnswer("42").withUrl("url").withTheme(theme1).addTag(tag1).build();
         questionRepository.save(question);
 
         Question foundQuestion = questionRepository.findOne(question.getId());
@@ -82,23 +88,24 @@ public class QuestionRepositoryTest {
 
     @Test
     public void findByTags(){
-        Question question1 = aQuestion().withQuestion("question1").withAnswer("42").withUrl("url1").withTheme(theme).addTag(tag).build();
-        Question question2 = aQuestion().withQuestion("question2").withAnswer("43").withUrl("url2").withTheme(theme).addTag(tag).build();
-        Question questionOtherTag = aQuestion().withQuestion("questionOtherTag").withAnswer("42").withUrl("url").withTheme(theme).addTag(otherTag).build();
+        Question question1 = aQuestion().withQuestion("question1").withAnswer("42").withUrl("url1").withTheme(theme1).addTag(tag1).build();
+        Question question2 = aQuestion().withQuestion("question2").withAnswer("43").withUrl("url2").withTheme(theme1).addTag(tag1).build();
+        Question questionOtherTag = aQuestion().withQuestion("questionOtherTag").withAnswer("42").withUrl("url").withTheme(theme1).addTag(otherTag).build();
 
         questionRepository.save(question1);
         questionRepository.save(question2);
         questionRepository.save(questionOtherTag);
 
-        List<Question> questions = questionRepository.findByTags(tag);
+        List<Question> questions = questionRepository.findByTags(tag1);
 
-        assertThat(questions.stream().map(Question::getId).collect(toList()), containsInAnyOrder(question1.getId(), question2.getId()));
+        assertThat(questions.stream().map(Question::getId).collect(toList()),
+                containsInAnyOrder(question1.getId(), question2.getId()));
     }
 
     @Test
     public void findByTags_NoTag(){
-        Question question1 = aQuestion().withQuestion("question1").withAnswer("42").withUrl("url1").withTheme(theme).addTag(tag).build();
-        Question question2 = aQuestion().withQuestion("question2").withAnswer("43").withUrl("url2").withTheme(theme).addTag(tag).build();
+        Question question1 = aQuestion().withQuestion("question1").withAnswer("42").withUrl("url1").withTheme(theme1).addTag(tag1).build();
+        Question question2 = aQuestion().withQuestion("question2").withAnswer("43").withUrl("url2").withTheme(theme1).addTag(tag1).build();
 
         questionRepository.save(question1);
         questionRepository.save(question2);
@@ -106,6 +113,23 @@ public class QuestionRepositoryTest {
         List<Question> questions = questionRepository.findByTags(null);
 
         assertThat(questions.stream().map(Question::getId).collect(toList()), containsInAnyOrder(question1.getId(), question2.getId()));
+    }
+
+    @Test
+    public void find(){
+        Question question1 = aQuestion().withQuestion("question1").withAnswer("42").withUrl("url1").withTheme(theme1).addTag(tag1).build();
+        Question question2 = aQuestion().withQuestion("question2").withAnswer("43").withUrl("url2").withTheme(theme1).addTag(tag2).build();
+        Question questionOtherTag = aQuestion().withQuestion("questionOtherTag").withAnswer("42").withUrl("url").withTheme(theme1).addTag(otherTag).build();
+        Question questionOtherTheme = aQuestion().withQuestion("questionOtherTheme").withAnswer("42").withUrl("url1").withTheme(themeOther).addTag(tag1).build();
+
+        questionRepository.save(question1);
+        questionRepository.save(question2);
+        questionRepository.save(questionOtherTag);
+        questionRepository.save(questionOtherTheme);
+
+        List<Question> questions = questionRepository.find(theme1, asList(tag1, tag2));
+        assertThat(questions.stream().map(Question::getId).collect(toList()),
+            contains(question1.getId(), question2.getId()));
     }
 
 

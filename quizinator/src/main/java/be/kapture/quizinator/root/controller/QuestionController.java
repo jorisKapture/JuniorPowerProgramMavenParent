@@ -1,6 +1,7 @@
 package be.kapture.quizinator.root.controller;
 
 import be.kapture.quizinator.root.dto.QuestionDTO;
+import be.kapture.quizinator.root.dto.QuestionSearchDTO;
 import be.kapture.quizinator.root.mapper.DozerBeanMultimapper;
 import be.kapture.quizinator.root.model.Question;
 import be.kapture.quizinator.root.model.Tag;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping()
+@RequestMapping(value = "/question")
 public class QuestionController {
     private final QuestionService questionService;
 
@@ -38,28 +39,28 @@ public class QuestionController {
 
     @ResponseBody
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/question", method = RequestMethod.GET)
+    @RequestMapping( method = RequestMethod.GET)
     public List<QuestionDTO> listAllQuestions(){
         return dozerBeanMultimapper.mapCollection(questionRepository.findAll(), QuestionDTO.class);
     }
 
     @ResponseBody
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/question/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public QuestionDTO findQuestionById(@PathVariable Long id){
         return dozerBeanMapper.map(questionRepository.findOne(id), QuestionDTO.class);
     }
 
     @ResponseBody
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/question/tag/{tagId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/tag/{tagId}", method = RequestMethod.GET)
     public List<QuestionDTO> findQuestionByTag(@PathVariable Long tagId){
         return dozerBeanMultimapper.mapCollection(questionService.findQuestions(tagId), QuestionDTO.class);
     }
 
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/question/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteQuestionById(@PathVariable Long id){
         questionRepository.delete(id);
@@ -67,9 +68,17 @@ public class QuestionController {
 
     @ResponseBody
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/question/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ResponseEntity<QuestionDTO> createQuestion(@RequestBody QuestionDTO questionDTO){
         Question question = dozerBeanMapper.map(questionDTO, Question.class);
         return new ResponseEntity<>(dozerBeanMapper.map(questionRepository.save(question), QuestionDTO.class), HttpStatus.OK);
     }
+
+    @ResponseBody
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/find", method = RequestMethod.POST)
+    public List<QuestionDTO> findQuestions(@RequestBody QuestionSearchDTO questionSearchDTO){
+        return dozerBeanMultimapper.mapCollection(questionService.find(questionSearchDTO.getThemeId(), questionSearchDTO.getTagIds()), QuestionDTO.class);
+    }
+
 }
