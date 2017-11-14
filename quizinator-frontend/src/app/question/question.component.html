@@ -29,13 +29,13 @@
     </div>
     <div class="col align-content-center">
       <label title="tag:">
-        <select [(ngModel)]="searchfilter.tags[0]" (change)="changeFilter()">
-          <option *ngFor="let tag of tags" [ngValue]="tag">{{tag.name}}</option>
+        <select [(ngModel)]="searchfilter.tagIds[0]" (change)="changeFilter()">
+          <option *ngFor="let tag of tags" [ngValue]="tag.id">{{tag.name}}</option>
         </select>
       </label>
       <label title="theme:">
-        <select [(ngModel)]="searchfilter.theme" (change)="changeFilter()">
-          <option *ngFor="let theme of themes" [ngValue]="theme">{{theme.name}}</option>
+        <select [(ngModel)]="searchfilter.themeId" (change)="changeFilter()">
+          <option *ngFor="let theme of themes" [ngValue]="theme.id">{{theme.name}}</option>
         </select>
       </label>
     </div>

@@ -43,11 +43,7 @@ export class QuestionViewComponent implements OnInit {
   }
 
   public changeFilter(): void {
-    if (this.filterTag == null) {
-      this.questionService.getQuestions().then(questions => this.questions = questions);
-    } else {
-      this.questionService.getQuestionsByTag(this.filterTag.id).then(questions => this.questions = questions);
-    }
+    this.questionService.getQuestionsByFilter(this.searchfilter).then(questions => this.questions = questions);
   }
 
   public addTagToNewQuestion() {
@@ -66,7 +62,7 @@ export class QuestionViewComponent implements OnInit {
   }
 
   public updateQuestion(question): void {
-    this.questionService.saveQuestion(question).then(() => this.getQuestions());
+    this.questionService.saveQuestion(question).then(() => this.changeFilter());
   }
 
   ngOnInit(): void {
@@ -74,11 +70,11 @@ export class QuestionViewComponent implements OnInit {
     this.getQuestions();
     this.getThemes();
     this.getTags();
-    this.searchfilter.tags = [];
+    this.searchfilter.tagIds = [];
   }
 
   public saveQuestion(): void {
-    this.questionService.saveQuestion(this.newQuestion).then(() => this.getQuestions());
+    this.questionService.saveQuestion(this.newQuestion).then(() => this.changeFilter());
   }
 
   public deleteQuestion(id): void {

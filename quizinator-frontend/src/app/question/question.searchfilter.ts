@@ -1,4 +1,4 @@
 export class SearchFilter{
-  theme: number;
-  tags: number[]
+  themeId: number;
+  tagIds: number[]
 }

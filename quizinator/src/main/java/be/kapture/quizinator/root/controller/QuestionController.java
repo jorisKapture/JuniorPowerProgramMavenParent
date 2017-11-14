@@ -77,8 +77,8 @@ public class QuestionController {
     @ResponseBody
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/find", method = RequestMethod.POST)
-    public List<QuestionDTO> findQuestions(@RequestBody QuestionSearchDTO questionSearchDTO){
-        return dozerBeanMultimapper.mapCollection(questionService.find(questionSearchDTO.getThemeId(), questionSearchDTO.getTagIds()), QuestionDTO.class);
+    public ResponseEntity<List<QuestionDTO>> findQuestions(@RequestBody QuestionSearchDTO questionSearchDTO){
+        return new ResponseEntity<List<QuestionDTO>>(dozerBeanMultimapper.mapCollection(questionService.find(questionSearchDTO.getThemeId(), questionSearchDTO.getTagIds()), QuestionDTO.class), HttpStatus.OK);
     }
 
 }
