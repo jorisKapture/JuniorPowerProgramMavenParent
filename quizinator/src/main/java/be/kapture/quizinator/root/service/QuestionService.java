@@ -9,6 +9,7 @@ import be.kapture.quizinator.root.repository.ThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,7 +74,20 @@ public class QuestionService {
     public List<Question> find(Long themeId, List<Long> tagIds) {
         Theme theme = (themeId == null) ? null : themeService.findOrThrow(themeId);
         List<Tag> tags = tagIds.stream().map(tagService::findOrThrow).collect(toList());
+        List<Question> result = new ArrayList<>();
+        if(theme != null && !tags.isEmpty()){
+            result = questionRepository.find(theme, tags);
+        }
+        else if (theme !=null){
+            result = questionRepository.findByTheme(theme);
+        }
+        else if (!tags.isEmpty()){
+            result = questionRepository.findByTags(tags.get(0));
+        }
+        else{
+            result = questionRepository.findAll();
+        }
 
-        return questionRepository.find(theme, tags);
+        return result;
     }
 }

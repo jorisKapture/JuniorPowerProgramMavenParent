@@ -43,6 +43,9 @@ export class QuestionViewComponent implements OnInit {
   }
 
   public changeFilter(): void {
+    if(isNaN(this.searchfilter.tagIds[0])){
+      this.searchfilter.tagIds = [];
+    }
     this.questionService.getQuestionsByFilter(this.searchfilter).then(questions => this.questions = questions);
   }
 
@@ -94,11 +97,6 @@ export class QuestionViewComponent implements OnInit {
 
   private setTags(tags: Tag[]): void {
     this.tags = tags;
-    let defaultTag = new Tag();
-    defaultTag.id = 0;
-    defaultTag.name = 'all';
-    this.extendedTags = tags;
-    this.extendedTags.unshift(defaultTag);
   }
 
   private getTags(): void {

@@ -30,11 +30,13 @@
     <div class="col align-content-center">
       <label title="tag:">
         <select [(ngModel)]="searchfilter.tagIds[0]" (change)="changeFilter()">
+          <option [value]="null" selected>All</option>
           <option *ngFor="let tag of tags" [ngValue]="tag.id">{{tag.name}}</option>
         </select>
       </label>
       <label title="theme:">
         <select [(ngModel)]="searchfilter.themeId" (change)="changeFilter()">
+          <option [value]="null" selected>All</option>
           <option *ngFor="let theme of themes" [ngValue]="theme.id">{{theme.name}}</option>
         </select>
       </label>

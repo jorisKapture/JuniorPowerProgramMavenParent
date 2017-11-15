@@ -15,6 +15,9 @@ public interface QuestionRepository extends JpaRepository<Question, Long>{
     @Query(value="select question from Question question join question.tags tags where ?1 = null or tags = ?1")
     List<Question> findByTags(Tag tag);
 
+    @Query(value="select question from Question question where ?1 = question.theme")
+    List<Question> findByTheme(Theme theme);
+
     @Query(value="select question from Question question join question.tags tags where ?1 = question.theme and tags in ?2 ")
     List<Question> find(Theme theme, List<Tag> tags);
 }

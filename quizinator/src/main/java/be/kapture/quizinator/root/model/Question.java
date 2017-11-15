@@ -1,6 +1,7 @@
 package be.kapture.quizinator.root.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -13,6 +14,7 @@ public class Question extends PersistentObject
 
     private String url;
 
+    @NotNull
     @ManyToOne
     private Theme theme;
 
