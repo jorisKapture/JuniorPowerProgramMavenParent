@@ -4,6 +4,7 @@
   <input [(ngModel)]="newQuestion.question" placeholder="question">
   <input [(ngModel)]="newQuestion.answer" placeholder="answer">
   <input [(ngModel)]="newQuestion.url" placeholder="url">
+  <input [(ngModel)]="newQuestion.picture" placeholder="picture">
   <select [(ngModel)]="newQuestion.theme">
     <option *ngFor="let theme of themes" [ngValue]="theme">{{theme.name}}</option>
   </select>
@@ -44,6 +45,7 @@
   </div>
   <div class="row m-2 p-1" *ngFor="let question of questions; index as i">
     <div class="col">
+      <img *ngIf="!!question.picture" src="{{question.picture}}" style="width: 150px; height: 75px;">
       <div class="row">
         <div class="col"><textarea [(ngModel)]="question.question" [disabled]="editEnabled[i]? null : 'disabled'"></textarea></div>
         <a href="{{question.url}}" *ngIf="(!editEnabled[i])&&(!!question.url)">link</a>

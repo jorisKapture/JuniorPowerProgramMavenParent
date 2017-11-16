@@ -17,6 +17,8 @@ public class QuestionDTO {
 
     private List<Tag> tags;
 
+    private String picture;
+
     private Theme theme;
 
     public Theme getTheme() {
@@ -65,5 +67,13 @@ public class QuestionDTO {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

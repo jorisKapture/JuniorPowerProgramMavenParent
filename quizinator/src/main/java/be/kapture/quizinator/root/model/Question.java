@@ -14,6 +14,8 @@ public class Question extends PersistentObject
 
     private String url;
 
+    private String picture;
+
     @NotNull
     @ManyToOne
     private Theme theme;
@@ -64,4 +66,12 @@ public class Question extends PersistentObject
     public void addTag(Tag tag) { this.tags.add(tag);}
 
     public void removeTag(Tag tag) { this.tags.remove(tag);}
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
 }

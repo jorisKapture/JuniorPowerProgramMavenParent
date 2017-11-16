@@ -61,4 +61,13 @@ public class TagService {
         return tags;
     }
 
+    public List<Long> findTagIdsFromString(String tagsString){
+        List<Tag> tags = findListCreateIfNeeded(tagsString);
+        List<Long> result = new ArrayList<>();
+        for(Tag tag : tags){
+            result.add(tag.getId());
+        }
+        return result;
+    }
+
 }
