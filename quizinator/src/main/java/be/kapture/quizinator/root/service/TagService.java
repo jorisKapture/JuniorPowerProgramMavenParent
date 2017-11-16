@@ -5,6 +5,7 @@ import be.kapture.quizinator.root.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -43,6 +44,21 @@ public class TagService {
 
     public Tag findByName(String name){
         return tagRepository.findByName(name);
+    }
+
+    public List<Tag> findListCreateIfNeeded(String tagsString){
+        String[] tagArray = tagsString.split(",");
+        List<Tag> tags = new ArrayList<>();
+        for(int i=0;i<tagArray.length;i++){
+            Tag tag = tagRepository.findByName(tagArray[i]);
+            if(tag == null){
+                tag = new Tag();
+                tag.setName(tagArray[i]);
+                tag = tagRepository.save(tag);
+            }
+            tags.add(tag);
+        }
+        return tags;
     }
 
 }

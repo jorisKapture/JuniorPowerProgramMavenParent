@@ -12,7 +12,6 @@ import java.util.List;
 public interface TagRepository extends JpaRepository<Tag, Long>{
     Tag findByName(String tag1);
 
-
 //    @Query(value="select question.tags from Question question where question=?1")
 //    List<Tag> findAllByQuestions(Question question);
 
