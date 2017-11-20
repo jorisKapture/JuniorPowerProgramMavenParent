@@ -8,6 +8,7 @@ import java.util.List;
 public class Question extends PersistentObject
 {
     // id, link, vraag, antwoord, thema en tags
+    @Column(length = 2000)
     private String question;
 
     private String answer;
