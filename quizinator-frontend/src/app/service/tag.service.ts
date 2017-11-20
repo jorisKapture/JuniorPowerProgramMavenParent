@@ -34,6 +34,13 @@ export class TagService{
       .catch(this.handleError);
   }
 
+  findCreateTags(tagsString : String) : Promise<Tag[]>{
+    return this.http.post(this.baseUrl + "/findcreate", tagsString)
+      .toPromise()
+      .then(res => res.json() as Tag)
+      .catch(this.handleError);
+  }
+
   private handleError(error: any): Promise<any>{
     return Promise.reject(error.message || error);
   }

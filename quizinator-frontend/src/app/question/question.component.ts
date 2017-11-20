@@ -25,8 +25,7 @@ export class QuestionViewComponent implements OnInit {
   private answerShown: boolean[] = [];
   private editEnabled: boolean[] = [];
   private answersShown: false;
-  private newTag: Tag;
-  private newTagName: string;
+  private newTags: String = "";
   private newQuestion: Question = new Question;
   filterTag: Tag;
   private editing: false;
@@ -49,17 +48,6 @@ export class QuestionViewComponent implements OnInit {
     this.questionService.getQuestionsByFilter(this.searchfilter).then(questions => this.questions = questions);
   }
 
-  public addTagToNewQuestion() {
-    let tag: Tag;
-    if (!!this.newTagName) {
-      tag = new Tag;
-      tag.name = this.newTagName;
-      this.newQuestion.tags.push(tag);
-    } else {
-      this.newQuestion.tags.push(this.newTag);
-    }
-  }
-
   public removeTagFromNewQuestion(index: number) {
     this.newQuestion.tags.splice(index, 1);
   }
@@ -77,7 +65,10 @@ export class QuestionViewComponent implements OnInit {
   }
 
   public saveQuestion(): void {
-    this.questionService.saveQuestion(this.newQuestion).then(() => this.changeFilter());
+    this.tagService.findCreateTags(this.newTags)
+      .then(result => this.newQuestion.tags = result)
+      .then( () => this.questionService.saveQuestion(this.newQuestion))
+      .then(() => this.changeFilter());
   }
 
   public deleteQuestion(id): void {

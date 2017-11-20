@@ -1,3 +1,21 @@
 .striped > .row:nth-child(even){
   background-color: #dcdcdc;
 }
+
+.answer {
+  color: transparent;
+  /*text-shadow: 0 0 10px rgba(0,0,0,0.5);*/
+}
+
+.answer:hover{
+  color: black;
+  text-shadow: none;
+}
+
+.editcheck{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+

@@ -12,35 +12,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping()
+@RequestMapping(value = "/tag")
 public class TagController {
     @Autowired
     private TagService tagService;
 
     @ResponseBody
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/tag", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public List<Tag> listAllTags(){
         return tagService.findAll();
     }
 
     @ResponseBody
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/tag/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Tag findTagById(@PathVariable Long id){
         return tagService.findOne(id);
     }
 
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/tag/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTagById(@PathVariable Long id){
         tagService.delete(id);
     }
 
+
     @ResponseBody
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/tag/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/findcreate", method = RequestMethod.POST)
+    public ResponseEntity<List<Tag>> findCreateTags(@RequestBody String tagsString){
+        return new ResponseEntity<List<Tag>>(tagService.findListCreateIfNeeded(tagsString), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Tag> createTag(@RequestBody Tag tag){
         Tag savedTag;
         try{

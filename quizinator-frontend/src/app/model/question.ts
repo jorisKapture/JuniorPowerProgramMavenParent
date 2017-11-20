@@ -8,5 +8,5 @@ export class Question{
   url: string;
   theme: Theme;
   tags: Tag[];
-  picture: string;
+  pictures: string;
 }

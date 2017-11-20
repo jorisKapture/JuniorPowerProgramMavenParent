@@ -1,33 +1,32 @@
-<h1>questionview</h1>
-
-<div style="margin: 10px;">
-  <input [(ngModel)]="newQuestion.question" placeholder="question">
-  <input [(ngModel)]="newQuestion.answer" placeholder="answer">
-  <input [(ngModel)]="newQuestion.url" placeholder="url">
-  <input [(ngModel)]="newQuestion.picture" placeholder="picture">
-  <select [(ngModel)]="newQuestion.theme">
-    <option *ngFor="let theme of themes" [ngValue]="theme">{{theme.name}}</option>
-  </select>
-  <br>
-  <select [(ngModel)]="newTag">
-    <option *ngFor="let tag of tags" [ngValue]="tag">{{tag.name}}</option>
-  </select>
-  <input [(ngModel)]="newTagName" style="display: none;">
-  <button (click)="addTagToNewQuestion()">Add Tag</button>
-  <br>
-  <span *ngFor="let tag of newQuestion.tags; let i = index;">
-    {{tag.name}} <button (click)="removeTagFromNewQuestion(i);">x</button> |
-  </span>
-  <br>
-  <button (click)="saveQuestion()">Add new Question</button>
-</div>
-
-<div class="container questions striped">
-  <div class="row m-2 p-1">
-    <div class="col-auto align-self-end"></div>
-    <div class="col align-content-end">
-      show all answers <input type="checkbox" autocomplete="off" [(ngModel)]="answersShown" (ngModelChange)="showAnswers()">
+<div class="container-fluid">
+  <h1>questionview</h1>
+  <div class="form-inline">
+    <div class="row">
+      <div class="col"><textarea [(ngModel)]="newQuestion.question" placeholder="question" class="form-control"></textarea></div>
+      <div class="col"><textarea [(ngModel)]="newQuestion.answer" placeholder="answer" class="form-control"></textarea></div>
+      <div class="col"><input [(ngModel)]="newQuestion.url" placeholder="url" class="form-control"></div>
+      <div class="col"><input [(ngModel)]="newQuestion.picture" placeholder="picture src" class="form-control"></div>
+      <div class="col">
+        <select [(ngModel)]="newQuestion.theme" class="form-control">
+          <option *ngFor="let theme of themes" [ngValue]="theme">{{theme.name}}</option>
+        </select>
+      </div>
     </div>
+    <div class="row">
+      <div class="col"><input placeholder="tag1,tag2" [(ngModel)]="newTags"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <button (click)="saveQuestion()" class="btn btn-primary">Add new Question</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container questions striped">
+
+  <div class="row m-2 p-1">
     <div class="col align-content-center">
       <label title="tag:">
         <select [(ngModel)]="searchfilter.tagIds[0]" (change)="changeFilter()">
@@ -43,38 +42,43 @@
       </label>
     </div>
   </div>
-  <div class="row m-2 p-1" *ngFor="let question of questions; index as i">
-    <div class="col">
-      <img *ngIf="!!question.picture" src="{{question.picture}}" style="width: 150px; height: 75px;">
+
+
+  <div class="row m-2 p-1" *ngFor="let question of questions; index as i" style="max-height: 10vmax;">
+    <div class="col-3">
+      <img *ngIf="!!question.picture" src="{{question.picture}}" class="img-fluid" style="max-height: 10vmax;">
+    </div>
+    <div class="col-6">
+      <textarea [(ngModel)]="question.question" [disabled]="editEnabled[i]? null : 'disabled'" class="h-100 w-100"></textarea>
+    </div>
+    <div class="col-3">
       <div class="row">
-        <div class="col"><textarea [(ngModel)]="question.question" [disabled]="editEnabled[i]? null : 'disabled'"></textarea></div>
-        <a href="{{question.url}}" *ngIf="(!editEnabled[i])&&(!!question.url)">link</a>
-        <div class="col"><input [(ngModel)]="question.url" *ngIf="editEnabled[i]"></div>
-        <div class="col-auto align-content-end align-self-end">
-          <small>
-            show answer <input type="checkbox" autocomplete="off" [(ngModel)]="answerShown[i]">
-          </small>
-          <div class="align-self-end">
-            <i class="fa fa-pencil" aria-hidden="true"></i>
-            <input type="checkbox" autocomplete="off" [(ngModel)]="editEnabled[i]">
-            <i class="fa fa-floppy-o" (click)="updateQuestion(question)" *ngIf="editEnabled[i]"></i>
-            <i class="fa fa-trash" (click)="deleteQuestion(question.id)" *ngIf="editEnabled[i]"></i>
-          </div>
+        <div class="col">
+          <input [(ngModel)]="question.answer" [disabled]="editEnabled[i]? null : 'disabled'" [ngClass]="editEnabled[i]? '' : 'answer'">
+        </div>
+        <div class="col justify-content-end">
+          <input id="checkbox{{question.id}}" type="checkbox" class="editcheck" autocomplete="off" [(ngModel)]="editEnabled[i]">
+          <label for="checkbox{{question.id}}"><i [ngClass]="editEnabled[i] ? 'fa fa-pencil-square':'fa fa-pencil-square-o'"></i></label>
+          <i class="fa fa-floppy-o" (click)="updateQuestion(question)" *ngIf="editEnabled[i]"></i>
+          <i class="fa fa-trash" (click)="deleteQuestion(question.id)" *ngIf="editEnabled[i]"></i>
         </div>
       </div>
       <div class="row">
-        <div class="col-auto theme">
-          <small> | {{question.theme.name}} | </small>
+        <div class="col">
+          <small>{{question.theme.name}}</small>
         </div>
-        <div class="col tag">
-          <small *ngFor="let tag of question.tags"> {{tag.name}} </small>
+        <div class="col">
+          <a href="{{question.url}}" *ngIf="(!editEnabled[i])&&(!!question.url)">link</a>
+          <input [(ngModel)]="question.url" *ngIf="editEnabled[i]" class="d-inline">
         </div>
       </div>
       <div class="row">
-        <div class="col answer" *ngIf="answerShown[i]; else elseBlock">
-          <input [(ngModel)]="question.answer" [disabled]="editEnabled[i]? null : 'disabled'"></div>
-        <ng-template #elseBlock>*****</ng-template>
+        <div class="col col-auto" *ngFor="let tag of question.tags">
+          <small>{{tag.name}}</small>
+        </div>
       </div>
     </div>
+
   </div>
+</div>
 </div>
