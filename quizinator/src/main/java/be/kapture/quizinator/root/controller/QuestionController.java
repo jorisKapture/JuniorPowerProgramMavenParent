@@ -7,8 +7,11 @@ import be.kapture.quizinator.root.model.Question;
 import be.kapture.quizinator.root.model.Tag;
 import be.kapture.quizinator.root.repository.QuestionRepository;
 import be.kapture.quizinator.root.repository.TagRepository;
+import be.kapture.quizinator.root.service.ParserService;
 import be.kapture.quizinator.root.service.QuestionService;
 import be.kapture.quizinator.root.service.TagService;
+import be.kapture.quizinator.root.service.ThemeService;
+import org.apache.log4j.Logger;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,19 +19,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/question")
 public class QuestionController {
+
     private final QuestionService questionService;
 
     private final QuestionRepository questionRepository;
 
     private final DozerBeanMultimapper dozerBeanMultimapper;
 
-
     private DozerBeanMapper dozerBeanMapper = new DozerBeanMapper();
+
 
     @Autowired
     public QuestionController(QuestionRepository questionRepository, DozerBeanMultimapper dozerBeanMultimapper, QuestionService questionService) {
@@ -72,6 +79,15 @@ public class QuestionController {
     public ResponseEntity<QuestionDTO> createQuestion(@RequestBody QuestionDTO questionDTO){
         Question question = dozerBeanMapper.map(questionDTO, Question.class);
         return new ResponseEntity<>(dozerBeanMapper.map(questionRepository.save(question), QuestionDTO.class), HttpStatus.OK);
+    }
+
+    @ResponseBody
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/bulkcreate", method = RequestMethod.POST)
+    public ResponseEntity<List<QuestionDTO>> bulkCreateQuestion(@RequestBody Map<String,String> json){
+        List<Question> questions = questionService.bulkCreate(json.get("urls"),json.get("tagsstring"),json.get("themename"));
+        List<QuestionDTO> questionDTOs = dozerBeanMultimapper.mapCollection(questions, QuestionDTO.class);
+        return new ResponseEntity<List<QuestionDTO>>(questionDTOs, HttpStatus.OK);
     }
 
     @ResponseBody

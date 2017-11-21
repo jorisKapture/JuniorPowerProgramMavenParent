@@ -6,9 +6,11 @@ import be.kapture.quizinator.root.model.Theme;
 import be.kapture.quizinator.root.repository.QuestionRepository;
 import be.kapture.quizinator.root.repository.TagRepository;
 import be.kapture.quizinator.root.repository.ThemeRepository;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +20,12 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 public class QuestionService {
+    static Logger log = Logger.getLogger(QuestionService.class.getName());
     private final ThemeService themeService;
     private final TagService tagService;
+
+    @Autowired
+    private ParserService parserService;
 
     private final QuestionRepository questionRepository;
 
@@ -89,5 +95,26 @@ public class QuestionService {
         }
 
         return result;
+    }
+
+    public List<Question> bulkCreate(String urlString, String tagsString, String themeName){
+        String[] urls = urlString.split("\n");
+        List<Tag> tags = tagService.findListCreateIfNeeded(tagsString);
+        List<Long> tagIds = new ArrayList<>();
+        for(Tag tag : tags){
+            tagIds.add(tag.getId());
+        }
+        Long themeId = themeService.findOrCreateId(themeName);
+
+        List<Question> questions = new ArrayList<>();
+        for(int i=0;i<urls.length;i++){
+            try {
+                Question question = questionRepository.save(parserService.makeFile(urls[i], themeId, tagIds));
+                questions.add(question);
+            } catch (IOException e){
+                log.error(e.getMessage());
+            }
+        }
+        return questions;
     }
 }

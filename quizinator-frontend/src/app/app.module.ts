@@ -9,6 +9,7 @@ import { InputViewComponent} from "./input/inputview.component";
 import { TagViewComponent} from "./tag/tag.component";
 import { ThemeViewComponent} from "./theme/theme.component";
 import { QuestionViewComponent} from "./question/question.component";
+import { QuestionCreateViewComponent} from "./question/question.create.component";
 import {AppRouting} from "./common/app.routing";
 import {TagService} from "./service/tag.service";
 
@@ -18,7 +19,8 @@ import {TagService} from "./service/tag.service";
     InputViewComponent,
     TagViewComponent,
     ThemeViewComponent,
-    QuestionViewComponent
+    QuestionViewComponent,
+    QuestionCreateViewComponent
   ],
   imports: [
     BrowserModule,

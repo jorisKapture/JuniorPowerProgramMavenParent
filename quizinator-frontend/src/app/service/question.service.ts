@@ -52,4 +52,15 @@ export class QuestionService{
   private handleError(error: any): Promise<any>{
     return Promise.reject(error.message || error);
   }
+
+  saveBulk(urls, tagsstring, themename) : Promise<Question[]>{
+    var postObject = {urls: "", tagsstring: "", themename: ""};
+    postObject.urls = urls;
+    postObject.tagsstring = tagsstring;
+    postObject.themename = themename;
+    return this.http.post(this.baseUrl + "/bulkcreate", postObject)
+      .toPromise()
+      .then(res => res.json().data as Question[])
+      .catch(this.handleError);
+  }
 }
