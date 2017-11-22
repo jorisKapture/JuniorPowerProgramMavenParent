@@ -1,6 +1,6 @@
 <div class="container-fluid">
-  <input [(ngModel)]="themename" placeholder="Theme Name" (change)="LogFields">
-  <input [(ngModel)]="tagsstring" placeholder="Comma Seperated tags" (change)="LogFields()">
-  <textarea placeholder="url list" [(ngModel)]="urls" (change)="LogFields()"></textarea>
+  <input [(ngModel)]="themename" placeholder="Theme Name">
+  <input [(ngModel)]="tagsstring" placeholder="Comma Seperated tags">
+  <textarea placeholder="url list" [(ngModel)]="urls"></textarea>
   <button (click)="GenerateQuestions()">Generate Questions</button>
 </div>

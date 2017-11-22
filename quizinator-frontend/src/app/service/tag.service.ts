@@ -35,6 +35,10 @@ export class TagService{
   }
 
   findCreateTags(tagsString : String) : Promise<Tag[]>{
+    if(!!!tagsString){
+      console.log("test1");
+      return Promise.resolve([] as Tag[]);
+    }
     return this.http.post(this.baseUrl + "/findcreate", tagsString)
       .toPromise()
       .then(res => res.json() as Tag)
