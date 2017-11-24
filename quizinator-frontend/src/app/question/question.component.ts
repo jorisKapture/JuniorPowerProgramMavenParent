@@ -26,6 +26,7 @@ export class QuestionViewComponent implements OnInit {
   private editEnabled: boolean[] = [];
   private answersShown: false;
   private newTags: String = "";
+  private tagStrings : String[] = [];
   private newQuestion: Question = new Question;
   filterTag: Tag;
   private editing: false;
@@ -52,8 +53,28 @@ export class QuestionViewComponent implements OnInit {
     this.newQuestion.tags.splice(index, 1);
   }
 
-  public updateQuestion(question): void {
+  public updateQuestion(questionindex): void {
+    this.updateQuestionTheme(questionindex)
+      .then(() => this.updateQuestionTags(questionindex))
+      .then(() => this.saveUpdatedQuestion(this.questions[questionindex]));
+    // this.questionService.saveQuestion(this.questions[questionindex]).then(() => this.changeFilter());
+  }
+
+  private updateQuestionTags(i): Promise<Tag[]>{
+    return this.tagService.findCreateTags(this.tagStrings[i]).then(res => this.questions[i].tags = res);
+  }
+
+  public saveUpdatedQuestion(question): void {
     this.questionService.saveQuestion(question).then(() => this.changeFilter());
+  }
+
+  private updateQuestionTheme(i) : Promise<Theme>{
+    return this.themeService.saveOrCreateTheme(
+      this.questions[i].theme.name
+    ).then(
+      res => this.questions[i].theme = res
+      );
+    //.then(() => this.saveUpdatedQuestion(this.questions[i]));
   }
 
   ngOnInit(): void {
@@ -76,10 +97,24 @@ export class QuestionViewComponent implements OnInit {
   }
 
   private getQuestions(): void {
-    this.questionService.getQuestions().then(questions => this.questions = questions);
+    this.questionService.getQuestions().then(questions => this.questions = questions).then(() => this.fillTagStrings());
     this.newQuestion.question = '';
     this.newQuestion.answer = '';
     this.newQuestion.url = '';
+  }
+
+  private fillTagStrings() : void{
+    for(var i=0; i<this.questions.length; i++){
+      this.tagStrings[i]= this.joinTags(this.questions[i].tags);
+    }
+  }
+
+  private joinTags(questiontags) : string{
+    var tagnames = [];
+    for(var i=0;i<questiontags.length;i++){
+      tagnames.push(questiontags[i].name);
+    }
+    return tagnames.join(',');
   }
 
   private getThemes(): void {

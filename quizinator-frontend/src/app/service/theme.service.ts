@@ -34,6 +34,13 @@ export class ThemeService{
       .catch(this.handleError);
   }
 
+  saveOrCreateTheme(themename): Promise<Theme>{
+    return this.http.post(this.baseUrl + "/findorcreate", themename)
+      .toPromise()
+      .then(res => res.json() as Theme)
+      .catch(this.handleError);
+  }
+
   private handleError(error: any): Promise<any>{
     return Promise.reject(error.message || error);
   }

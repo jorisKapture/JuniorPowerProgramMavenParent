@@ -59,13 +59,14 @@
         <div class="col justify-content-end">
           <input id="checkbox{{question.id}}" type="checkbox" class="editcheck" autocomplete="off" [(ngModel)]="editEnabled[i]">
           <label for="checkbox{{question.id}}"><i [ngClass]="editEnabled[i] ? 'fa fa-pencil-square':'fa fa-pencil-square-o'"></i></label>
-          <i class="fa fa-floppy-o" (click)="updateQuestion(question)" *ngIf="editEnabled[i]"></i>
+          <i class="fa fa-floppy-o" (click)="updateQuestion(i)" *ngIf="editEnabled[i]"></i>
           <i class="fa fa-trash" (click)="deleteQuestion(question.id)" *ngIf="editEnabled[i]"></i>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <small>{{question.theme.name}}</small>
+          <small *ngIf="!editEnabled[i]">{{question.theme.name}}</small>
+          <input *ngIf="editEnabled[i]" [(ngModel)]="question.theme.name" placeholder="theme">
         </div>
         <div class="col">
           <a href="{{question.url}}" *ngIf="(!editEnabled[i])&&(!!question.url)">link</a>
@@ -73,9 +74,15 @@
         </div>
       </div>
       <div class="row">
-        <div class="col col-auto" *ngFor="let tag of question.tags">
-          <small>{{tag.name}}</small>
+        <ng-container *ngIf="!editEnabled[i]">
+          <div class="col col-auto" *ngFor="let tag of question.tags">
+            <small>{{tag.name}}</small>
+          </div>
+        </ng-container>
+        <div class="col col-auto" *ngIf="editEnabled[i]">
+          <input [ngModel]="tagStrings[i]">
         </div>
+
       </div>
     </div>
 
