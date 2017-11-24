@@ -1,14 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Question} from '../model/question';
 import {QuestionService} from '../service/question.service';
-import {Subscription} from 'rxjs/Subscription';
-import {RouterModule} from '@angular/router';
 import {Router} from '@angular/router';
 import {ThemeService} from '../service/theme.service';
 import {Theme} from '../model/theme';
 import {TagService} from '../service/tag.service';
 import {Tag} from '../model/tag';
-import {SearchFilter} from "./question.searchfilter";
+import {SearchFilter} from './question.searchfilter';
 
 @Component({
   selector: 'article',
@@ -18,19 +16,20 @@ import {SearchFilter} from "./question.searchfilter";
 })
 
 export class QuestionViewComponent implements OnInit {
-  private questions: Question[];
-  private themes: Theme[];
+  editEnabled: boolean[] = [];
+  searchfilter: SearchFilter = new SearchFilter;
+  newQuestion: Question = new Question;
+  newTags: String = '';
+
+  tagStrings: String[] = [];
+  themes: Theme[];
+  questions: Question[];
   tags: Tag[];
   extendedTags: Tag[];
   private answerShown: boolean[] = [];
-  private editEnabled: boolean[] = [];
   private answersShown: false;
-  private newTags: String = "";
-  private tagStrings : String[] = [];
-  private newQuestion: Question = new Question;
   filterTag: Tag;
   private editing: false;
-  private searchfilter : SearchFilter = new SearchFilter;
 
   constructor(private questionService: QuestionService, private router: Router, private themeService: ThemeService,
               private tagService: TagService) {
@@ -43,7 +42,7 @@ export class QuestionViewComponent implements OnInit {
   }
 
   public changeFilter(): void {
-    if(isNaN(this.searchfilter.tagIds[0])){
+    if (isNaN(this.searchfilter.tagIds[0])) {
       this.searchfilter.tagIds = [];
     }
     this.questionService.getQuestionsByFilter(this.searchfilter).then(questions => this.questions = questions);
@@ -60,7 +59,7 @@ export class QuestionViewComponent implements OnInit {
       .then(() => this.saveUpdatedQuestion(this.questions[questionindex]));
   }
 
-  private updateQuestionTags(i): Promise<Tag[]>{
+  private updateQuestionTags(i): Promise<Tag[]> {
     return this.tagService.findCreateTags(this.tagStrings[i]).then(res => this.questions[i].tags = res);
   }
 
@@ -68,13 +67,13 @@ export class QuestionViewComponent implements OnInit {
     this.questionService.saveQuestion(question).then(() => this.changeFilter());
   }
 
-  private updateQuestionTheme(i) : Promise<Theme>{
+  private updateQuestionTheme(i): Promise<Theme> {
     return this.themeService.saveOrCreateTheme(
       this.questions[i].theme.name
     ).then(
       res => this.questions[i].theme = res
       );
-    //.then(() => this.saveUpdatedQuestion(this.questions[i]));
+    // .then(() => this.saveUpdatedQuestion(this.questions[i]));
   }
 
   ngOnInit(): void {
@@ -103,15 +102,15 @@ export class QuestionViewComponent implements OnInit {
     this.newQuestion.url = '';
   }
 
-  private fillTagStrings() : void{
-    for(var i=0; i<this.questions.length; i++){
-      this.tagStrings[i]= this.joinTags(this.questions[i].tags);
+  private fillTagStrings(): void {
+    for ( let i = 0; i < this.questions.length; i++) {
+      this.tagStrings[i] = this.joinTags(this.questions[i].tags);
     }
   }
 
-  private joinTags(questiontags) : string{
-    var tagnames = [];
-    for(var i=0;i<questiontags.length;i++){
+  private joinTags(questiontags): string {
+    const tagnames = [];
+    for ( let i = 0; i < questiontags.length; i++) {
       tagnames.push(questiontags[i].name);
     }
     return tagnames.join(',');
