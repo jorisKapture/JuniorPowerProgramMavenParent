@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
@@ -51,20 +51,27 @@ public class TagService {
 
     public List<Tag> findListCreateIfNeeded(String tagsString){
         if (isEmpty(tagsString)){
-            return Collections.emptyList();
+            return emptyList();
         }
         String[] tagArray = tagsString.split(",");
         List<Tag> tags = new ArrayList<>();
-        for(int i=0;i<tagArray.length;i++){
-            Tag tag = tagRepository.findByName(tagArray[i]);
-            if(tag == null){
-                tag = new Tag();
-                tag.setName(tagArray[i]);
-                tag = tagRepository.save(tag);
+
+        for (String tagName : tagArray) {
+            Tag tag = tagRepository.findByName(tagName);
+            if (tag == null) {
+                tag = createAndSaveTag(tagName);
             }
             tags.add(tag);
         }
         return tags;
+    }
+
+    private Tag createAndSaveTag(String aTagArray) {
+        Tag tag;
+        tag = new Tag();
+        tag.setName(aTagArray);
+        tag = tagRepository.save(tag);
+        return tag;
     }
 
     public List<Long> findTagIdsFromString(String tagsString){
