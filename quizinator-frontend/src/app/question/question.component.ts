@@ -58,7 +58,6 @@ export class QuestionViewComponent implements OnInit {
     this.updateQuestionTags(questionindex)
       .then(() => this.updateQuestionTheme(questionindex))
       .then(() => this.saveUpdatedQuestion(this.questions[questionindex]));
-    // this.questionService.saveQuestion(this.questions[questionindex]).then(() => this.changeFilter());
   }
 
   private updateQuestionTags(i): Promise<Tag[]>{

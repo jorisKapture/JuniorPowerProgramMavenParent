@@ -54,10 +54,10 @@ export class QuestionService{
   }
 
   saveBulk(urls, tagsstring, themename) : Promise<Question[]>{
-    var postObject = {urls: "", tagsstring: "", themename: ""};
-    postObject.urls = urls;
-    postObject.tagsstring = tagsstring;
-    postObject.themename = themename;
+    var postObject = {urls: [], tagsString: "", themeName: ""};
+    postObject.urls = urls.split(/\r?\n/);
+    postObject.tagsString = tagsstring;
+    postObject.themeName = themename;
     return this.http.post(this.baseUrl + "/bulkcreate", postObject)
       .toPromise()
       .then(res => res.json().data as Question[])

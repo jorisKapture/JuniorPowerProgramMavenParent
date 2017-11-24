@@ -97,8 +97,7 @@ public class QuestionService {
         return result;
     }
 
-    public List<Question> bulkCreate(String urlString, String tagsString, String themeName){
-        String[] urls = urlString.split("\n");
+    public List<Question> bulkCreate(List<String> urls, String tagsString, String themeName){
         List<Tag> tags = tagService.findListCreateIfNeeded(tagsString);
         List<Long> tagIds = new ArrayList<>();
         for(Tag tag : tags){
@@ -107,12 +106,22 @@ public class QuestionService {
         Long themeId = themeService.findOrCreateId(themeName);
 
         List<Question> questions = new ArrayList<>();
-        for(int i=0;i<urls.length;i++){
+        int failures = 0;
+
+        for(String url : urls){
             try {
-                Question question = questionRepository.save(parserService.makeFile(urls[i], themeId, tagIds));
+                Question question = questionRepository.save(parserService.makeFile(url, themeId, tagIds));
                 questions.add(question);
-            } catch (IOException e){
+            }
+//            catch (IOException e){
+//                log.error(e.getMessage());
+//                log.error("failed saving: " + url);
+//            }
+            catch (Exception e){
+                failures++;
+                log.error("failure " + failures);
                 log.error(e.getMessage());
+                log.error("failed saving: " + url);
             }
         }
         return questions;

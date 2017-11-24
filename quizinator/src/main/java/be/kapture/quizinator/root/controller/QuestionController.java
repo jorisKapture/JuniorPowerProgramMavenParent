@@ -2,6 +2,7 @@ package be.kapture.quizinator.root.controller;
 
 import be.kapture.quizinator.root.dto.QuestionDTO;
 import be.kapture.quizinator.root.dto.QuestionSearchDTO;
+import be.kapture.quizinator.root.dto.QuestionUrlListDTO;
 import be.kapture.quizinator.root.mapper.DozerBeanMultimapper;
 import be.kapture.quizinator.root.model.Question;
 import be.kapture.quizinator.root.model.Tag;
@@ -84,8 +85,8 @@ public class QuestionController {
     @ResponseBody
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/bulkcreate", method = RequestMethod.POST)
-    public ResponseEntity<List<QuestionDTO>> bulkCreateQuestion(@RequestBody Map<String,String> json){
-        List<Question> questions = questionService.bulkCreate(json.get("urls"),json.get("tagsstring"),json.get("themename"));
+    public ResponseEntity<List<QuestionDTO>> bulkCreateQuestion(@RequestBody QuestionUrlListDTO questionUrlListDTO){
+        List<Question> questions = questionService.bulkCreate(questionUrlListDTO.getUrls(),questionUrlListDTO.getTagsString(),questionUrlListDTO.getThemeName());
         List<QuestionDTO> questionDTOs = dozerBeanMultimapper.mapCollection(questions, QuestionDTO.class);
         return new ResponseEntity<List<QuestionDTO>>(questionDTOs, HttpStatus.OK);
     }

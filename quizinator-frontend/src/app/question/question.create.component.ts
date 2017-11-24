@@ -27,6 +27,7 @@ export class QuestionCreateViewComponent implements OnInit {
   }
 
   public GenerateQuestions():void{
+
     this.questionService.saveBulk(this.urls,this.tagsstring,this.themename)
       .then(() => this.ClearInputs());
   }
