@@ -21,6 +21,7 @@ export class QuestionCreateViewComponent implements OnInit {
   private urls : String = "";
   private themename : String = "";
   private tagsstring : String = "";
+  private themes: Theme[];
 
   constructor(private questionService: QuestionService, private router: Router, private themeService: ThemeService,
               private tagService: TagService) {
@@ -45,6 +46,11 @@ export class QuestionCreateViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getThemes();
+  }
+
+  private getThemes(): void {
+    this.themeService.getThemes().then((themes => this.themes = themes));
   }
 
 }

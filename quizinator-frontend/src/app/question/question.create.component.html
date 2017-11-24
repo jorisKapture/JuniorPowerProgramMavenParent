@@ -1,5 +1,11 @@
 <div class="container-fluid">
-  <input [(ngModel)]="themename" placeholder="Theme Name">
+  <!--<input [(ngModel)]="themename" placeholder="Theme Name">-->
+  <label title="theme:">
+    <select [(ngModel)]="themename">
+      <option *ngFor="let theme of themes" [ngValue]="theme.id">{{theme.name}}</option>
+    </select>
+  </label>
+
   <input [(ngModel)]="tagsstring" placeholder="Comma Seperated tags">
   <textarea placeholder="url list" [(ngModel)]="urls"></textarea>
   <button (click)="GenerateQuestions()">Generate Questions</button>
