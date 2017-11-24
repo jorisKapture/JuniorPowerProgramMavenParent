@@ -57,4 +57,14 @@ public class ThemeService {
         }
         return theme.getId();
     }
+
+    public Theme findOrCreate(String name){
+        Theme theme = themeRepository.findByName(name);
+        if(theme == null){
+            theme = new Theme();
+            theme.setName(name);
+            theme = themeRepository.save(theme);
+        }
+        return theme;
+    }
 }

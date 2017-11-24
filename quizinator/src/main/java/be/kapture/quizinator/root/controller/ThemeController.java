@@ -42,7 +42,7 @@ public class ThemeController {
     @ResponseBody
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/theme/create", method = RequestMethod.POST)
-    public ResponseEntity<Theme> createTag(@RequestBody Theme theme){
+    public ResponseEntity<Theme> createTheme(@RequestBody Theme theme){
         Theme savedTheme;
         try{
             savedTheme = themeService.save(theme);
@@ -51,5 +51,14 @@ public class ThemeController {
             return new ResponseEntity<>(savedTheme, HttpStatus.UNPROCESSABLE_ENTITY);
         }
         return new ResponseEntity<>(savedTheme, HttpStatus.OK);
+    }
+
+
+    @ResponseBody
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/theme/findorcreate", method = RequestMethod.POST)
+    public ResponseEntity<Theme> findOrCreateTheme(@RequestBody String themename){
+        Theme theme = themeService.findOrCreate(themename);
+        return new ResponseEntity<>(theme, HttpStatus.OK);
     }
 }
