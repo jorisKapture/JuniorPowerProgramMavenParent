@@ -54,8 +54,9 @@ export class QuestionViewComponent implements OnInit {
   }
 
   public updateQuestion(questionindex): void {
-    this.updateQuestionTheme(questionindex)
-      .then(() => this.updateQuestionTags(questionindex))
+
+    this.updateQuestionTags(questionindex)
+      .then(() => this.updateQuestionTheme(questionindex))
       .then(() => this.saveUpdatedQuestion(this.questions[questionindex]));
     // this.questionService.saveQuestion(this.questions[questionindex]).then(() => this.changeFilter());
   }
