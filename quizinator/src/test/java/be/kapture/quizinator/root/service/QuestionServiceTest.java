@@ -134,11 +134,11 @@ public class QuestionServiceTest {
     //    public void saveQuestion() throws Exception {
     //        Question question= mock(Question.class);
     //
-    //        questionService.saveQuestion(question, THEME.getName(), asList(TAG1.getName(), TAG2.getName()));
+    //        questionService.saveQuestion(question, THEME.getName(), asList(TAG0.getName(), TAG2.getName()));
     //
     //        InOrder inOrder = inOrder(question, questionRepository);
     //        inOrder.verify(question).setTheme(THEME);
-    //        inOrder.verify(question).setTags(asList(TAG1, TAG2));
+    //        inOrder.verify(question).setTags(asList(TAG0, TAG2));
     //        inOrder.verify(questionRepository).save(question);
     //
     //        questionService.deleteQuestion(question.getId());
@@ -153,11 +153,11 @@ public class QuestionServiceTest {
 //        when(tagRepository.save(newTagCaptor.capture())).thenReturn(TAG_NEW);
 //        Question question= mock(Question.class);
 //
-//        questionService.saveQuestion(question, THEME.getName(), asList(TAG1.getName(), newTagName));
+//        questionService.saveQuestion(question, THEME.getName(), asList(TAG0.getName(), newTagName));
 //
 //        InOrder inOrder = inOrder(question, questionRepository);
 //        inOrder.verify(question).setTheme(THEME);
-//        inOrder.verify(question).setTags(asList(TAG1, TAG_NEW));
+//        inOrder.verify(question).setTags(asList(TAG0, TAG_NEW));
 //        inOrder.verify(questionRepository).save(question);
 //        questionService.deleteQuestion(question.getId());
 //    }

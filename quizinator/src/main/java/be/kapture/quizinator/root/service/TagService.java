@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
 public class TagService {
@@ -47,6 +50,9 @@ public class TagService {
     }
 
     public List<Tag> findListCreateIfNeeded(String tagsString){
+        if (isEmpty(tagsString)){
+            return Collections.emptyList();
+        }
         String[] tagArray = tagsString.split(",");
         List<Tag> tags = new ArrayList<>();
         for(int i=0;i<tagArray.length;i++){
