@@ -20,20 +20,19 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 public class QuestionService {
-    static Logger log = Logger.getLogger(QuestionService.class.getName());
+    private static Logger log = Logger.getLogger(QuestionService.class.getName());
+
     private final ThemeService themeService;
     private final TagService tagService;
-
-    @Autowired
-    private ParserService parserService;
-
+    private final ParserService parserService;
     private final QuestionRepository questionRepository;
 
     @Autowired
-    public QuestionService(QuestionRepository questionRepository, ThemeService themeService, TagService tagService) {
+    public QuestionService(QuestionRepository questionRepository, ThemeService themeService, TagService tagService, ParserService parserService) {
         this.questionRepository = questionRepository;
         this.themeService = themeService;
         this.tagService = tagService;
+        this.parserService = parserService;
     }
 
     public List<Question> findQuestions(long tagId) {
@@ -110,7 +109,8 @@ public class QuestionService {
 
         for(String url : urls){
             try {
-                Question question = questionRepository.save(parserService.makeFile(url, themeId, tagIds));
+                Question question = parserService.makeFile(url, themeId, tags);
+                question = questionRepository.save(question);
                 questions.add(question);
             }
 //            catch (IOException e){

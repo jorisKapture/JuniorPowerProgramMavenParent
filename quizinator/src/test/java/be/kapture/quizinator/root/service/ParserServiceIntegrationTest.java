@@ -13,7 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -40,9 +43,6 @@ public class ParserServiceIntegrationTest {
     @Autowired
     private TagService tagService;
 
-    @Autowired
-    private QuestionService questionService;
-
     private Theme theme;
     private Tag tag1;
     private Tag tag2;
@@ -60,37 +60,35 @@ public class ParserServiceIntegrationTest {
         themeService.delete(theme.getId());
         tagService.delete(tag1.getId());
         tagService.delete(tag2.getId());
-
-
     }
 
     @Test
     public void makeFile() throws Exception {
-        Question question = parserService.makeFile(URL1, theme.getId(), Arrays.asList(tag1.getId(), tag2.getId()));
+        Question question = parserService.makeFile(URL1, theme.getId(), asList(tag1, tag2));
 
-        Question loadedQuestion= questionService.findQuestion(question.getId());
+        assertThat(question.getAnswer(), is("Een ander zijn geluk"));
+        assertThat(question.getUrl(), is(URL1));
+        assertThat(question.getQuestion(), is(FIRST_PARAGRAPH1));
+        assertThat(question.getTheme().getId(), is(theme.getId()));
+        assertThat(question.getTags(), contains(tag1, tag2));
 
-        assertThat(loadedQuestion.getAnswer(), is("Een ander zijn geluk"));
-        assertThat(loadedQuestion.getUrl(), is(URL1));
-        assertThat(loadedQuestion.getQuestion(), is(FIRST_PARAGRAPH1));
-        assertThat(loadedQuestion.getTheme().getId(), is(theme.getId()));
-        assertThat(loadedQuestion.getTags().stream().map(Tag::getId).collect(toList()), contains(tag1.getId(), tag2.getId()));
-
-        questionService.deleteQuestion(question.getId());
     }
 
     @Test
     public void makeFile_WithExtra() throws Exception {
-        question = parserService.makeFile(URL2, theme.getId(), Arrays.asList(tag1.getId(), tag2.getId()));
+        question = parserService.makeFile(URL2, theme.getId(), asList(tag1, tag2));
 
-        Question loadedQuestion= questionService.findQuestion(question.getId());
+        assertThat(question.getAnswer(), is("Gent"));
+        assertThat(question.getUrl(), is(URL2));
+        assertThat(question.getQuestion(), is("X  is de hoofdstad van de Belgische provincie Oost-Vlaanderen en van het arrondissement X. X heeft een oppervlakte van 156,18 km² en telt circa 259.000 inwoners (2017), waarmee het naar inwonertal de op één na grootste gemeente van België is, na Antwerpen. De stad is tevens de hoofdplaats van het kieskanton X en telt vijf gerechtelijke kantons."));
+    }
 
-        assertThat(loadedQuestion.getAnswer(), is("Gent"));
-        assertThat(loadedQuestion.getUrl(), is(URL2));
-        assertThat(loadedQuestion.getQuestion(), is("X  is de hoofdstad van de Belgische provincie Oost-Vlaanderen en van het arrondissement X. X heeft een oppervlakte van 156,18 km² en telt circa 259.000 inwoners (2017), waarmee het naar inwonertal de op één na grootste gemeente van België is, na Antwerpen. De stad is tevens de hoofdplaats van het kieskanton X en telt vijf gerechtelijke kantons."));
+    @Test
+    public void makeFile_WithPhoto() throws Exception {
+        question = parserService.makeFile("https://nl.wikipedia.org/wiki/Koen_Crucke", theme.getId(), emptyList());
 
-        questionService.deleteQuestion(question.getId());
-
+        assertThat(question.getAnswer(), is("Koen Crucke"));
+        assertThat(question.getPicture(), is("http://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Kapsalon_KC.jpg/266px-Kapsalon_KC.jpg"));
     }
 
 

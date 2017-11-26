@@ -5,14 +5,15 @@ import be.kapture.quizinator.root.model.Tag;
 import be.kapture.quizinator.root.model.Theme;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.substringBetween;
 
 /**
@@ -23,20 +24,15 @@ public class ParserService {
 
     private JSoupParser parser;
     private final ThemeService themeService;
-    private final TagService tagService;
-    private final QuestionService questionService;
 
     @Autowired
-    public ParserService(JSoupParser parser, ThemeService themeService, TagService tagService, QuestionService questionService) {
+    public ParserService(JSoupParser parser, ThemeService themeService) {
         this.parser = parser;
         this.themeService = themeService;
-        this.tagService = tagService;
-        this.questionService = questionService;
     }
 
-    public Question makeFile(String url, Long themeId, List<Long> tagIds) throws IOException {
+    public Question makeFile(String url, Long themeId, List<Tag> tags) throws IOException {
         Theme theme = themeService.findOrThrow(themeId);
-        List<Tag> tags = tagIds.stream().map(tagService::findOrThrow).collect(toList());
 
         Question quizItem = new Question();
         quizItem.setUrl(url);
@@ -44,6 +40,8 @@ public class ParserService {
         String title = StringUtils.removeEnd(documentItem.title(), " - Wikipedia");
         quizItem.setAnswer(title);
 
+        Elements imageElements = documentItem.getElementsByTag("img");
+        getMainImage(imageElements).ifPresent(u-> quizItem.setPicture("http:"+u));
         String firstParagraaf = parser.getFirstParagraaf(documentItem);
         String explanation = nameIgnoreCaseWithoutParentheses(title);
         String extra = substringBetween(firstParagraaf, "(", ")");
@@ -56,9 +54,19 @@ public class ParserService {
         quizItem.setTheme(theme);
         quizItem.setTags(tags);
 
-        questionService.saveQuestion(quizItem);
         return quizItem;
 
+    }
+
+    private Optional<String> getMainImage(Elements imageElements) {
+        return imageElements.stream()
+                .filter(this::imageWideEnough)
+                .findFirst()
+                .map(imageElement -> imageElement.attr("src"));
+    }
+
+    private boolean imageWideEnough(Element imageElement) {
+        return imageElement.attr("width") != null && Integer.parseInt(imageElement.attr("width"))>100;
     }
 
     private String nameIgnoreCaseWithoutParentheses(String name) {
