@@ -22,19 +22,19 @@ export class QuestionCreateViewComponent implements OnInit {
               private tagService: TagService) {
   }
 
-  public GenerateQuestions(): void {
+  public generateQuestions(): void {
 
     this.questionService.saveBulk(this.urls, this.tagsstring, this.themename)
-      .then(() => this.ClearInputs());
+      .then(() => this.clearInputs());
   }
 
-  public ClearInputs(): void {
+  public clearInputs(): void {
     this.urls = '';
     this.themename = '';
     this.tagsstring = '';
   }
 
-  public LogFields(): void {
+  public logFields(): void {
     console.log(this.urls);
     console.log(this.tagsstring);
     console.log(this.themename);

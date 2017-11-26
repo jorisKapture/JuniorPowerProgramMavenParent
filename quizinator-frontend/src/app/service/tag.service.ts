@@ -41,7 +41,7 @@ export class TagService{
     }
     return this.http.post(this.baseUrl + "/findcreate", tagsString)
       .toPromise()
-      .then(res => res.json() as Tag)
+      .then(res => res.json() as Tag[])
       .catch(this.handleError);
   }
 
